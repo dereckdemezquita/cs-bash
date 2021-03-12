@@ -1,6 +1,6 @@
 # cs-bash
 
-A primer on BASH scripting and Linux systems, will make it into a course for: derecksnotes.com
+A primer on BASH scripting and Linux systems, will make it into a course for: [derecksnotes.com](www.derecksnotes.com)
 
 # Bash quick start; basic commands
 
