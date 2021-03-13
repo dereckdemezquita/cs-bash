@@ -21,6 +21,7 @@ cat file-name.txt # print file contnets
 less file-name.txt # print large file contnets in pages
 cut # print certain columns from text file such as csv
 grep # match a string/regex
+sed # regex string replacement
 ls -la > list-of-files.txt # redirect outputs
 wc -l text.csv # count word/characters/lines
 sort -r -n -b # sort in reverse numerical order and ignore leading white spaces
@@ -28,7 +29,7 @@ uniq # gets unique non-adjacent data
 echo $SHELL # print a variable (preceed with $ sign)
 test="A value or file input of some sort." # define a variable
 for item in  list1 list2 list3; do echo $item; done # for loop
-
+# multi-line for loop
 for item in $@
 do
     echo "Testing: $item"
@@ -44,11 +45,33 @@ bash script.sh 28 John
 
 `|` the pipe command separator allows the passsage of one output to another command. Chains can be built in this way for example: `ls -l | grep ".*\.file-extension` that command allows one to find all files from `ls -l` that have the given extension.
 
+## Getting help
+
+Use the `man command-name` command to get help for a specific command. For example `man ls` would get you the documentation in a paginated view for `ls`. 
+
+Note the following for help:
+
+- `NAME` tells you what the command does.
+- `SYNOPSIS` list all possible flags.
+- `[...]` are optional flags.
+- `|` separates alternatives.
+- `...` arguments that can be repeats.
+
 # Introduction to BASH scripting
 
 Before computers had GUIs they had command-line interfaces. The shell is an interface through which we can run other programmes and points their output to a human readable form; it then prompts for the next command. 
 
-With shell scripting you can automate repetitive tasks and more.
+What is BASH and why use it? BASH stands for "Bourne Again Shell". It is a shell that was developed in the 80's. It is often the default for many Unix systems such as Linux and MacOS systems; MacOS has recently switched to zsh - a variant of BASH.
+
+BASH can be used to run programmes and data pipelines or automate repetitive tasks. All major cloud computing systems have a CLI to their products: AWS, Google Cloud, Microsoft Azure.
+
+Learning and being capable of using SHELL scripting and BASH is an essential skill.
+
+BASH scripting is the process whereby a programming writes a BASH script in a file and saves it. This file can then be executed and even repeatedly used for convience. 
+
+## Basic tips
+
+BASH is a 0 indexed language. This means that arrays start counting from 0. Thus, the first item in a list is 0, then 1, then `n - 1` for the ending item.
 
 *Note you can use the tab key to autocomplete file and directory names.*
 
@@ -58,8 +81,6 @@ A file and directory can be defined as such:
 
 - `/home/usr/username/Documents/`
 - `/home/usr/username/Documents/somefile.txt`
-
-## Basic tips
 
 - Never use spaces in file names; use underscores `_`.
 - `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
@@ -150,7 +171,7 @@ tail -n 20 file.csv | head -n 3
 
 Can be used to combine data files. 
 
-## `grep` text selection
+## `grep` regex selection
 
 In order to select text that contains a certain string use the command `grep`. This can be used with a quoted argument which is the string to match as such:
 
@@ -175,6 +196,14 @@ Here are some common flags with `grep`:
 - `-l` print the names of files containing matches but not the matches.
 - `-n` print line numbers for matching lines.
 - `-v` invert the match; only show lines that don't match.
+
+## `sed` regex string replacement
+
+The `sed` command allows you to replace a matching string with another. The syntax requires a regular expression as follows:
+
+```bash
+echo "The duck went to the market." | sed "s/duck/fox/g"
+```
 
 ## Outputing to a file aka redirecting outputs
 
@@ -280,6 +309,28 @@ echo $SHELL
 /bin/zsh
 ```
 
+## Anatomy of a BASH script
+
+The first part of a BASH script is a "shebang" often seen as this: `#!/usr/bash` on the very first line. This is so that the interpreter knows to use BASH and where it's located on your machine.
+
+If you are having issues try to check where it's located using the command: `which bash`.
+
+The next part of the script is your code. 
+
+```bash
+#!/usr/bash
+
+# your code goes here
+for item in item1 item2 item3
+do
+    echo "Print: $item"
+done
+```
+
+These files are typically used with the extension `.sh`. Be sure to read the next section on execution permissions.
+
+Run your script by using the command: `bash script.sh`. Or if the file contains the "shebang" on the first line the no need to define the interpreter simply use `./script.sh`.
+
 ## Saving and running scripts
 
 In order to write shell scripts in a file and use them use the `.sh` extension on a file name. Be sure to change the permissions on the file you created to allow for execution. This may require use of `chmod` as follows:
@@ -357,16 +408,23 @@ do
 done
 ```
 
-## Getting help
+## Streams in BASH
 
-Use the `man command-name` command to get help for a specific command. For example `man ls` would get you the documentation in a paginated view for `ls`. 
+There are three kinds of streams of data in BASH:
 
-Note the following for help:
+1. `STDIN` standard input going into a programme.
+1. `STDOUT` standard output going out of a programme.
+1. `STDERR` standard errors from the programme.
 
-- `NAME` tells you what the command does.
-- `SYNOPSIS` list all possible flags.
-- `[...]` are optional flags.
-- `|` separates alternatives.
-- `...` arguments that can be repeats.
+Sometimes in a programme you can see the following lines at the end of a script:
+
+```bash
+2> /dev/null # redirects STDERR to be suppressed
+1> /dev/null # STDOUT is being suppressed
+
+cat file.txt 1> std-output-redirection.txt # redirects the standard output to a file
+```
+
+
 
 
