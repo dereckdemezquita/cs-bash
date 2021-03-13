@@ -5,7 +5,8 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 # Bash quick start; basic commands
 
 ```bash
-history # prints a list of recent commands use `!n` to re-use a specific command by index.
+history # prints a list of recent commands
+    !2 # re-runs command n2 from the history
 chmod # modify permissions on a file/directory
 pwd # find current directory
 cd # change directory
@@ -19,8 +20,6 @@ touch file-name.txt # create file
 cat file-name.txt # print file contnets
 less file-name.txt # print large file contnets in pages
 cut # print certain columns from text file such as csv
-history # prints a list of recent commands
-    !2 # re-runs command n2 from the history
 grep # match a string/regex
 ls -la > list-of-files.txt # redirect outputs
 wc -l text.csv # count word/characters/lines
