@@ -28,6 +28,18 @@ uniq # gets unique non-adjacent data
 echo $SHELL # print a variable (preceed with $ sign)
 test="A value or file input of some sort." # define a variable
 for item in  list1 list2 list3; do echo $item; done # for loop
+
+for item in $@
+do
+    echo "Testing: $item"
+done
+
+echo '{
+    echo "Username: $1";
+    echo "Age: $2";
+}' > script.sh
+
+bash script.sh 28 John
 ```
 
 `|` the pipe command separator allows the passsage of one output to another command. Chains can be built in this way for example: `ls -l | grep ".*\.file-extension` that command allows one to find all files from `ls -l` that have the given extension.
