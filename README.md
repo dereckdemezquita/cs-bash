@@ -5,6 +5,8 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 # Bash quick start; basic commands
 
 ```bash
+history # prints a list of recent commands use `!n` to re-use a specific command by index.
+chmod # modify permissions on a file/directory
 pwd # find current directory
 cd # change directory
 ls # list contents of a given directory
@@ -21,6 +23,12 @@ history # prints a list of recent commands
     !2 # re-runs command n2 from the history
 grep # match a string/regex
 ls -la > list-of-files.txt # redirect outputs
+wc -l text.csv # count word/characters/lines
+sort -r -n -b # sort in reverse numerical order and ignore leading white spaces
+uniq # gets unique non-adjacent data
+echo $SHELL # print a variable (preceed with $ sign)
+test="A value or file input of some sort." # define a variable
+for item in  list1 list2 list3; do echo $item; done # for loop
 ```
 
 `|` the pipe command separator allows the passsage of one output to another command. Chains can be built in this way for example: `ls -l | grep ".*\.file-extension` that command allows one to find all files from `ls -l` that have the given extension.
@@ -33,14 +41,17 @@ With shell scripting you can automate repetitive tasks and more.
 
 *Note you can use the tab key to autocomplete file and directory names.*
 
-## Some basics
-
 The filesystem manages files and directories in the computer system. These are defined by absoulute paths to the system's root. The root being the lowest level directory holding all other system files designated by `/`.
 
 A file and directory can be defined as such: 
 
 - `/home/usr/username/Documents/`
 - `/home/usr/username/Documents/somefile.txt`
+
+## Basic tips
+
+- Never use spaces in file names; use underscores `_`.
+- `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
 
 ## Absolute vs relative paths
 
@@ -174,7 +185,139 @@ This command will let you count the number of works, characters, or lines in a d
 wc -l text.csv
 ```
 
+## `sort` data
 
+In order to sort use the command `sort` with flags:
+
+- `-f` ignore case.
+- `-n` sort numerically.
+- `-r` sort in reverse order.
+- `-b` ignore leading blanks.
+
+## `uniq` removing duplicates
+
+This commamnd removes adjacent duplicated lines. Bellow is an example:
+
+```bash
+cut -d , -f 1 data.csv
+Elephant
+Elephant
+Tiger
+Tiger
+Zebra
+Tiger
+
+cut -d , -f 1 data.csv | uniq 
+Elephant
+Tiger
+Zebra
+Tiger
+```
+
+Note that as state above this only works on adjacent lines so note that Tiger is left in duplicate where duplicate lines are not adjacent; sort to get strictly unique.
+
+# BASH scripting
+
+Here we get into actually creating more permanent scripts and code; not just typing single commands into the terminal.
+
+## Printing variables
+
+In order to store information you can use environment variables; you are storing information in these pre-existing variables that is. These are named as such with all capitals. 
+
+- HOME User's home directory `/home/repl`
+- PWD Working directory	`pwd`
+- SHELL Which shell program	`/bin/bash | /bin/zsh`
+- USER User ID `repl`
+
+Type `set` in the terminal to get a full list (there are many):
+
+```bash
+set | head
+'!'=0
+'#'=0
+'$'=8043
+'*'=(  )
+-=569Xils
+0=/bin/zsh
+'?'=130
+@=(  )
+ARGC=0
+CDPATH=''
+```
+
+You can print the value of a variable, even user defined ones, by using the `echo` command and the variable preceded by a dollar sign `$`.
+
+```bash
+echo $SHELL
+/bin/zsh
+```
+
+## Storing variables
+
+In order to create a variable use the following syntax.
+
+```bash
+test="A value or file input of some sort."
+echo $test
+A value or file input of some sort.
+```
+
+## `for` loops
+
+The structure and syntax of a for loop in BASH is as follows:
+
+```bash
+for item in  list1 list2 list3; do echo $item; done
+list1
+list2
+list3
+
+for item in ./*; do ls -l $item; done
+-rw-r--r--  1 work  staff  9680 12 Mar 18:01 ./README.md
+-rw-r--r--  1 work  staff  42 12 Mar 17:42 ./data.csv
+```
+
+Note that a variable is defined and then called. 
+
+## Manually editing a file
+
+There are number of different editors that can be used in `Unix`: `nano` and `vim` just to name two very popular ones.
+
+To use them use the command name and a file as an argument:
+
+```bash
+nano data.csv
+```
+
+You can then navigate and edit with:
+
+- `Ctrl + K` deletes a line.
+- `Ctrl + U` undo line deletion.
+- `Ctrl + O` save file ("o" for "output").
+- `Ctrl + X` exit the editor.
+
+## Saving and running scripts
+
+In order to write shell scripts in a file and use them use the `.sh` extension on a file name. Be sure to change the permissions on the file you created to allow for execution. This may require use of `chmod` as follows:
+
+```bash
+chmod u+x script.sh
+```
+
+You can then run the file using the following syntax in the terminal:
+
+```bash
+bash script.sh
+```
+
+## Pass filenames to a script
+
+In order to have a script use files we give it as an argument in the terminal we can use the following syntax inside the script: `$@`. This allows the script to the use our arguments in the CLI.
+
+```bash
+echo "sort $@ | uniq -c" > script.sh
+bash script.sh Documents/*\.csv
+```
 
 ## Getting help
 
