@@ -219,6 +219,23 @@ Note that as state above this only works on adjacent lines so note that Tiger is
 
 Here we get into actually creating more permanent scripts and code; not just typing single commands into the terminal.
 
+## Manually editing a file
+
+There are number of different editors that can be used in `Unix`: `nano` and `vim` just to name two very popular ones.
+
+To use them use the command name and a file as an argument:
+
+```bash
+nano data.csv
+```
+
+You can then navigate and edit with:
+
+- `Ctrl + K` deletes a line.
+- `Ctrl + U` undo line deletion.
+- `Ctrl + O` save file ("o" for "output").
+- `Ctrl + X` exit the editor.
+
 ## Printing variables
 
 In order to store information you can use environment variables; you are storing information in these pre-existing variables that is. These are named as such with all capitals. 
@@ -251,6 +268,47 @@ echo $SHELL
 /bin/zsh
 ```
 
+## Saving and running scripts
+
+In order to write shell scripts in a file and use them use the `.sh` extension on a file name. Be sure to change the permissions on the file you created to allow for execution. This may require use of `chmod` as follows:
+
+```bash
+chmod u+x script.sh
+```
+
+You can then run the file using the following syntax in the terminal:
+
+```bash
+bash script.sh
+```
+
+## Pass filenames to a script
+
+In order to have a script use files we give it as an argument in the terminal we can use the following syntax inside the script: `$@`. This allows the script to the use our arguments in the CLI.
+
+```bash
+echo "sort $@ | uniq -c" > script.sh
+bash script.sh Documents/*\.csv
+```
+
+## Process arguments in a script
+
+In order to have more complex scripts with more than one input you can use the syntax of `$n`; where n is the number of the argument. Note that an order is applied. The arguments in a script are processed in the same order in which they are sent. So if your script and command are as such then expect the following:
+
+```bash
+echo '{
+    echo "Username: $1";
+    echo "Age: $2";
+}' > script.sh
+
+bash script.sh 28 John
+Username: 28
+Age: John
+bash script.sh John 28
+Username: John
+Age: 28
+```
+
 ## Storing variables
 
 In order to create a variable use the following syntax.
@@ -278,44 +336,13 @@ for item in ./*; do ls -l $item; done
 
 Note that a variable is defined and then called. 
 
-## Manually editing a file
-
-There are number of different editors that can be used in `Unix`: `nano` and `vim` just to name two very popular ones.
-
-To use them use the command name and a file as an argument:
+A multi-line syntax for `for` loops in a script is as follows:
 
 ```bash
-nano data.csv
-```
-
-You can then navigate and edit with:
-
-- `Ctrl + K` deletes a line.
-- `Ctrl + U` undo line deletion.
-- `Ctrl + O` save file ("o" for "output").
-- `Ctrl + X` exit the editor.
-
-## Saving and running scripts
-
-In order to write shell scripts in a file and use them use the `.sh` extension on a file name. Be sure to change the permissions on the file you created to allow for execution. This may require use of `chmod` as follows:
-
-```bash
-chmod u+x script.sh
-```
-
-You can then run the file using the following syntax in the terminal:
-
-```bash
-bash script.sh
-```
-
-## Pass filenames to a script
-
-In order to have a script use files we give it as an argument in the terminal we can use the following syntax inside the script: `$@`. This allows the script to the use our arguments in the CLI.
-
-```bash
-echo "sort $@ | uniq -c" > script.sh
-bash script.sh Documents/*\.csv
+for item in $@
+do
+    echo "Testing: $item"
+done
 ```
 
 ## Getting help
