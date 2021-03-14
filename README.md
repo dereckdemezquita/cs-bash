@@ -1,4 +1,4 @@
-# cs-bash
+# cs-bash <img src="./figures/project-logo.png" width="200" align="right">
 
 A primer on BASH scripting and Linux systems, will make it into a course for: [derecksnotes.com](www.derecksnotes.com)
 
