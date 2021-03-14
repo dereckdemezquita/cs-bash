@@ -2,4 +2,4 @@
 awk 'FNR==1{print ""}{print}' scripts/* > pure_scripts.sh
 
 # Move and rename the .md built to top level
-
+cp build-md/build/cs-bash.md ./README.md
