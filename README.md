@@ -12,6 +12,10 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 - \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
     - A newer syntax for this same method is `$(some_command)`.
 - `date` returns the current date and time: `date Sat 13 Mar 2021 15:56:49 PST`.
+- All variables in BASH are global by default.
+    - `local var="Something"` restrict to local scope
+
+<br>
 
 - Check BASH version with `bash --version`.
 
@@ -243,7 +247,7 @@ That command allows us to get all files in a given directory that have the exten
 
 Here are some common flags with `grep`:
 
-- `-q` makes it quiet so it returns simply `true`/`false`.
+- `-q` make grep return a boolean `true`/`false`.
 - `-c` print the number of matching lines per file.
 - `-h` don't print names of files when searching.
 - `-i` ignore capitalisations ("Name" and "name" treated as matches).
@@ -433,6 +437,45 @@ When passing multiple arguments to a script - these are saved to a `ARGV` variab
 - `$@`/`$*` prints out all arguments array.
 - `$#` prints the length of the array of arguments
 
+## Streams in BASH
+
+There are three kinds of streams of data in BASH:
+
+1. `STDIN` standard input going into a programme.
+1. `STDOUT` standard output going out of a programme.
+1. `STDERR` standard errors from the programme.
+
+Sometimes in a programme you can see the following lines at the end of a script:
+
+```bash
+2> /dev/null # redirects STDERR to be suppressed
+1> /dev/null # STDOUT is being suppressed
+
+cat file.txt 1> std-output-redirection.txt # redirects the standard output to a file
+```
+
+## Arithmetic and numbers in BASH
+
+Numbers are not natively supported in BASH; in R or JS for example you could type something like: `3 + 2` in a console and the arithmetic would return a result. In BASH this does not work. 
+
+In order to do arithmetic you can use the utility `expr` with the following syntax: `expr 2 + 2`.
+
+Note that `expr` cannot handle decimals. In order to solve this you could instead use `bc`, it invokes an interactive calculator. However you can pipe values to it and use it in a similar way to `expr` but with decimals: 
+
+```bash
+expr 1 + 6.2
+expr: not a decimal number: '6.2'
+
+echo "1 + 6.2" | bc
+```
+
+Note `bc` also takes an argument for stipulating how many decimal places to return - `scale`. By default it returns whole numbers rounding.
+
+When using numbers for example assigning them to a variable name be sure not to assign them as a string with quotes. Keep them as numbers in order to be able to use them as number types later on.
+
+*You might see some people use a double paranethesis method for invoking `expr`: `$((1 + 2))`.*
+
+
 ## Objects in BASH: storing variables
 
 In order to create a variable use the following syntax. Note you set the variable with no spaces between the variable name and the value: `var_name=value`. Then you can call the variable by use of a dollar sign `$` as such:
@@ -554,6 +597,58 @@ do
 done
 ```
 
+To create a numeric range to iterate through you can use something called brace extension. This is done with curly brackets: `{start..stop..increment}` by default this increments by 1 if you do not specify the third argument.
+
+You can also use three expression syntax using parenthesis: `((x=2;x<=10;x+=3))`. This might seem very familiar if you are experiences with `JavaScript`.
+
+```bash
+# brace extensions
+for x in {1..10..3}
+do
+    echo $x
+done
+
+# three expression
+for ((x=2;x<=10;x+=3))
+do
+    echo $x
+done
+```
+
+You can also use something called glob expansions to iterate in place, this uses the `*` asterisk. This can be used for example to read in all files from a directory at once:
+
+```bash
+# read in all files from directory
+for car in cars_dir/*\.txt # only matches .txt files
+do
+    cat $car
+done
+```
+
+A nested SHELL cna also be used to create a `for` loop. This can be useful for matching specific files on a condition or otherwise then passing the result to the `for` above loop for more work:
+
+```bash
+for car in `ls cars_dir/ | grep -i 'Honda'``
+do
+    echo $car
+done
+```
+
+## `while` loops
+
+These are similar to `for` loops but they have a condition that is tested at each iteration. This is useful if you have a variable that is being modified each loop that needs to be checked. Iterations continue until the conidition is no longer met:
+
+```bash
+x=1
+while [ $x -le 100 ]
+do
+    echo $x
+    ((x+=1))
+done
+```
+
+**BEWARE OF INFINITE LOOPS; MODIFY YOUR CONDITIONS INSIDE WHILE LOOPS**
+
 ## `if` statements and conditional flow
 
 An if statement can be written with the following syntax; note that when using a numerical condition use double parenthesis `(())` or you can use `[]` brackets with a flag:
@@ -631,40 +726,179 @@ if `grep -q expression file.txt`; then
 fi
 ```
 
-## Streams in BASH
+## `case` statements
 
-There are three kinds of streams of data in BASH:
-
-1. `STDIN` standard input going into a programme.
-1. `STDOUT` standard output going out of a programme.
-1. `STDERR` standard errors from the programme.
-
-Sometimes in a programme you can see the following lines at the end of a script:
+Case statements are light in syntax than `if` statements. This is often useful when you have multiple conditions and actions to take. These can technically be done with `if` statements but case statements are useful.
 
 ```bash
-2> /dev/null # redirects STDERR to be suppressed
-1> /dev/null # STDOUT is being suppressed
-
-cat file.txt 1> std-output-redirection.txt # redirects the standard output to a file
+# case statement
+case "string_or_var" in # pass string or variable; even a nested SHELL
+    CONDITION_1)
+    code_command;;
+    CONDITION_2)
+    code_command;;
+    *)
+    DEFAULT_CONDITION code_command;;
+esac # case backwards
 ```
 
-## Arithmetic and numbers in BASH
-
-Numbers are not natively supported in BASH; in R or JS for example you could type something like: `3 + 2` in a console and the arithmetic would return a result. In BASH this does not work. 
-
-In order to do arithmetic you can use the utility `expr` with the following syntax: `expr 2 + 2`.
-
-Note that `expr` cannot handle decimals. In order to solve this you could instead use `bc`, it invokes an interactive calculator. However you can pipe values to it and use it in a similar way to `expr` but with decimals: 
+Here is an example demonstrating an `if` statement refactored as a `case` statement:
 
 ```bash
-expr 1 + 6.2
-expr: not a decimal number: '6.2'
+# complicated if statement
+if grep -q "House Cat" $1; then
+    mv $1 mammal/
+fi
+if grep -q "Crocodile" $1; then
+    mv $1 reptile/
+fi
+if grep -q "Bald Eagle" $1; then
+    mv $1 bird/
+fi
 
-echo "1 + 6.2" | bc
+# case statement
+case `cat $1` in
+    "House Cat")
+    mv $1 mammal/;;
+    "Crocodile")
+    mv $1 reptile/;;
+    "Bald Eagle")
+    mv $1 bird/;;
+    *)
+    mv $1 other/;;
+esac
+
+# case statement matching days of week
+case $1 in
+  # weekdays
+  Monday|Tuesday|Wednesday|Thursday|Friday)
+  echo "Weekday";;
+  # weekend
+  Saturday|Sunday)
+  echo "Weekend";;
+  # default
+  *)
+  echo "Unrecognised";;
+esac
 ```
 
-Note `bc` also takes an argument for stipulating how many decimal places to return - `scale`. By default it returns whole numbers rounding.
+## `function`s in BASH
 
-When using numbers for example assigning them to a variable name be sure not to assign them as a string with quotes. Keep them as numbers in order to be able to use them as number types later on.
+Functions allow you to write code that can be re-used - modular code. There are two main syntax for functions in BASH as follows:
 
-*You might see some people use a double paranethesis method for invoking `expr`: `$((1 + 2))`.*
+```bash
+func_name () {
+    # code goes here
+    return # something
+}
+
+function func_name () { # parenthesis optional here
+    # code goes here
+    return # something
+}
+```
+
+In order to pass arguments into functions is very simple. Use the dollar `$` sign:
+
+The same system as shown above applies:
+
+- `$1 ... $n`
+- `$@`/`$*` arguments in `ARGV`.
+- `$#` number of elements.
+
+Note that when building functions you must take into consideration the scope of your code; local and global. All variables in BASH are global by default. Beware as this might be unfamiliar. 
+
+To restrict a scope use the `local` keyword:
+
+```bash
+function a_func () {
+    local var="Something" # restrict to local scope
+}
+```
+
+### `return` keyword
+
+In BASH the function returns based on if the function was successfully executed `O` or not `1-255`. This is captured in the global variable `$?`.
+
+We have some options:
+
+1. Assign results to a global variable.
+1. `echo` in the last line and capture it in a variable using a nested SHELL.
+
+```bash
+function func {
+    fake_command # this should err
+}
+
+func # called
+echo $? # print the err returned
+
+# bash: fake_command: command not found
+echo $? # print the err returned
+127 # 127 means the code called does not exist
+
+# return with a nested SHELL
+function func_2 {
+    echo `echo "scale=2; ($1 - $2) / 2 * 100" | bc`
+}
+
+saved_var=`func_2 21 5`
+echo "The result is $saved_var"
+```
+
+# Automation and `cron` jobs
+
+You can schedule a script to be run on a schedule. This is done through a utility called `cron`. This helps to optimise your time and resources. The use `cron` is an essential skill.
+
+`cron` has been a part of the `unix` systems since about the 70's. The name cron comes from the Greek "chronos". 
+
+It works with something called a `crontab`. This is a file that contains jobs called `cronjobs` which directs the programme as to what to run and when.
+
+Call `crontab -l` in order to see what jobs are schedule by the user.
+
+You can get an idea of how `cronjobs` work by the following structure:
+
+```txt
+# ┌───────────── minute (0 - 59)
+# │ ┌───────────── hour (0 - 23)
+# │ │ ┌───────────── day of the month (1 - 31)
+# │ │ │ ┌───────────── month (1 - 12)
+# │ │ │ │ ┌───────────── day of the week (0 - 6) (Sunday to Saturday;
+# │ │ │ │ │                                   7 is also Sunday on some systems)
+# │ │ │ │ │
+# │ │ │ │ │
+# * * * * * <command to execute>
+```
+
+*Source: [wikipedia - cron](https://en.wikipedia.org/wiki/Cron)*
+
+In a `crontab` file you have many jobs - one per line. The starts are one for each unit of time: min, hour, day of month, month, day of the week. Note that you replace a placeholder start with what values you desire. Here is a quick example:
+
+```cron
+15 2 * * * bash script.sh
+```
+
+The minutes star is set to fifteen, this means fifteen minutes after the hour has set 0. Hours star is set to two, this means the second hour after 0 *eg.* 0200 (2 a.m.) The last are not set and left to stars so that means every day and month.
+
+This means that the job runs every day at 0215 (2:15 a.m.).
+
+You can run programmes at `t` time intervals:
+
+```cron
+10,20,40 * * * * bash script.sh
+```
+
+The above job would run at 10, 20, and 40 minutes every hour. You can also use a `/` for every `t` increment.
+
+```cron
+*/5 * * * * bash script.sh
+```
+
+The above would run every five minutes every day every hour.
+
+## To schedule a `cron` job
+
+1. Use the command `crontab -e` to edit the `cronjobs` list. 
+1. Create the job's command: `*/5 * * * * bash script.sh`.
+
+To check that the job is scheduled and running check with `crontab -l`.
