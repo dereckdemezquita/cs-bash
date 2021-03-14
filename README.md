@@ -1,22 +1,3 @@
----
-title: "BASH scripting"
-author: "Dereck de Mézquita"
-date: "14 March, 2021"
-knit: (function(inputFile, encoding) { 
-      rmarkdown::render(inputFile,
-                        encoding=encoding, 
-                        output_file=file.path(dirname(inputFile), "./build/", "/cs-bash.html")) })
-output:
-  html_document: 
-    fig_caption: yes
-    keep_md: yes
-    number_sections: yes
-    toc: yes
-    # code_folding: hide
-editor_options: 
-  chunk_output_type: inline
----
-
 # cs-bash <img src="./figures/project-logo.png" width="100" align="right">
 
 A primer on BASH scripting and Linux systems, will make it into a course for: [derecksnotes.com](www.derecksnotes.com)
