@@ -13,6 +13,8 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
     - A newer syntax for this same method is `$(some_command)`.
 - `date` returns the current date and time: `date Sat 13 Mar 2021 15:56:49 PST`.
 
+- Check BASH version with `bash --version`.
+
 ```bash
 history # prints a list of recent commands
     !2 # re-runs command n2 from the history
@@ -43,13 +45,17 @@ for item in $@
 do
     echo "Testing: $item"
 done
-
+# a script with multiple variables
 echo '{
     echo "Username: $1";
     echo "Age: $2";
 }' > script.sh
-
-bash script.sh 28 John
+declare -a my_array # creates an empty array
+my_array=(1 2 3) # creates an array of 1, 2, 3
+echo ${my_array[@]} # prints all elements
+echo ${#my_arary[@]} # prints the length 
+array[@]:n:m # slice an array
+echo ${!friends_list[@]} # return all keys of associative list
 ```
 
 `|` the pipe command separator allows the passsage of one output to another command. Chains can be built in this way for example: `ls -l | grep ".*\.file-extension` that command allows one to find all files from `ls -l` that have the given extension.
@@ -71,6 +77,8 @@ Note the following for help:
 Before computers had GUIs they had command-line interfaces. The shell is an interface through which we can run other programmes and points their output to a human readable form; it then prompts for the next command. 
 
 What is BASH and why use it? BASH stands for "Bourne Again Shell". It is a shell that was developed in the 80's. It is often the default for many Unix systems such as Linux and MacOS systems; MacOS has recently switched to zsh - a variant of BASH.
+
+**Note that in MacOS's `zsh` implementation `zsh` is 1 indexed.**
 
 BASH can be used to run programmes and data pipelines or automate repetitive tasks. All major cloud computing systems have a CLI to their products: AWS, Google Cloud, Microsoft Azure.
 
@@ -398,7 +406,7 @@ When passing multiple arguments to a script - these are saved to a `ARGV` variab
 - `$@`/`$*` prints out all arguments array.
 - `$#` prints the length of the array of arguments
 
-## Storing variables
+## Objects in BASH: storing variables
 
 In order to create a variable use the following syntax. Note you set the variable with no spaces between the variable name and the value: `var_name=value`. Then you can call the variable by use of a dollar sign `$` as such:
 
@@ -406,6 +414,85 @@ In order to create a variable use the following syntax. Note you set the variabl
 test="A value or file input of some sort."
 echo $test
 A value or file input of some sort.
+```
+
+## Objects in BASH: arrays
+
+There are two types of arrays in BASH: numerical-indexed arrays or list with key value pairs.
+
+### Numerical-indexed array
+
+There are two ways to create a numerical-indexed arrays:
+
+```bash
+declare -a my_array # creates an empty array
+my_array=(1 2 3) # creates an array of 1, 2, 3
+```
+
+Note the separation with spaces, *not* commas.
+
+In order to print you array you can print all elements by use of the `{array[@]}` syntax. Like so:
+
+```bash
+my_array=(1 2 3)
+echo ${my_array[@]} # prints all elements
+echo ${#my_arary[@]} # prints the length 
+```
+
+In order to access elements of array use `[]` brackets. As stated before BASH is 0 indexed. Elements can be changed by using the bracket notation and setting the value.
+
+```bash
+my_array=(1 2 3)
+echo ${my_array[2]} # prints 3
+
+my_array[1]=10
+echo ${my_array[@]}
+```
+
+**Again please note that BASH is often 0 indexed, but MacOS's recent implementation of `zsh` is indeed 1 indexed.**
+
+In order to slice a part of an array or get things in a certain interval use the syntax:
+
+```bash
+array[@]:n:m
+```
+
+Note that `m` is the number of elements to return after the starting index `n`.
+
+Appending to an array uses the operator `+=`:
+
+```bash
+my_array=(1 2 3 4 5 6 7 8 9)
+my_array+=(10) # note the use of parenthesis
+
+echo ${my_array[@]}
+1 2 3 4 5 6 7 8 9 10
+
+my_array+=10 # not using parenthesis yields different results
+110 2 3 4 5 6 7 8 9 10
+```
+
+Note the difference in results; however, this does not occur in `zsh`. In `zsh` you get the same result as when using parenthesis: `1 2 3 4 5 6 7 8 9 10`.
+
+### Associative arrays; key-value paired
+
+*Note this feature is only available in BASH v4+.*
+
+To create an associative array you must use the `declare` syntax. Either declare an empty array first and then add key-values or declare with key-value all at once.
+
+Set keys with square brackets `[]` and values after the equals `=` sign. Multiple elements at once can be declared.
+
+```bash
+declare -A friends_list # declare first
+friends_list=([name]="Guy" [age]=21) # add elements
+
+declare -A friends_list=([name]="Guy" [age]=21) # all at once
+```
+
+Associative arrays' keys can all be got with the following syntax `!`:
+
+```bash
+echo ${!friends_list[@]} # return all keys
 ```
 
 ## `for` loops
