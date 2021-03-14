@@ -32,6 +32,7 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 +
 -
 *
+/
 ```
 
 ```bash
