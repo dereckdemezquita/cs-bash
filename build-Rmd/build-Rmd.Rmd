@@ -1,7 +1,7 @@
 ---
 title: "BASH scripting"
 author: "Dereck de Mézquita"
-date: "14 March, 2021"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
@@ -17,7 +17,27 @@ editor_options:
   chunk_output_type: inline
 ---
 
-# cs-bash <img src="./figures/project-logo.png" width="100" align="right">
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup-shell-export, eval=FALSE, include=FALSE}
+knit_hooks_source <- knitr::knit_hooks$get("source")
+knitr::knit_hooks$set(source = function (x, options) {
+  if (!is.null(options$save))
+    writeLines(x, options$save)
+  knit_hooks_source(x, options)
+})
+knitr::opts_hooks$set(engine = function(options) {
+  if (options$engine == "bash") {
+    options$eval <- FALSE
+    options$save <- paste0(options$label, ".sh")
+  }
+  options
+})
+```
+
+# cs-bash
 
 A primer on BASH scripting and Linux systems, will make it into a course for: [derecksnotes.com](www.derecksnotes.com)
 
@@ -25,48 +45,19 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 
 This course was prepared by Dereck de Mezquita, inspired by a number of different resources online and personal experience with SHELL scripting. This document is prepared in an `.Rmd` file with `knitr`; let's start by clearing all files in the `./playground` directory.
 
-
-```bash
+```{bash}
 rm -r playground
 mkdir playground
 ```
 
 In this course we will be using the `iris` and `mtcars` datasets. This is saved in a `.csv` file in the data directory:
 
-
-```bash
+```{bash}
 head data/iris.csv
 ```
 
-```
-## "sepal.length","sepal.width","petal.length","petal.width","variety"
-## 5.1,3.5,1.4,.2,"Setosa"
-## 4.9,3,1.4,.2,"Setosa"
-## 4.7,3.2,1.3,.2,"Setosa"
-## 4.6,3.1,1.5,.2,"Setosa"
-## 5,3.6,1.4,.2,"Setosa"
-## 5.4,3.9,1.7,.4,"Setosa"
-## 4.6,3.4,1.4,.3,"Setosa"
-## 5,3.4,1.5,.2,"Setosa"
-## 4.4,2.9,1.4,.2,"Setosa"
-```
-
-
-```bash
+```{bash}
 head data/mtcars.csv
-```
-
-```
-## model,mpg,cyl,disp,hp,drat,wt,qsec,vs,am,gear,carb
-## Mazda RX4,21,6,160,110,3.9,2.62,16.46,0,1,4,4
-## Mazda RX4 Wag,21,6,160,110,3.9,2.875,17.02,0,1,4,4
-## Datsun 710,22.8,4,108,93,3.85,2.32,18.61,1,1,4,1
-## Hornet 4 Drive,21.4,6,258,110,3.08,3.215,19.44,1,0,3,1
-## Hornet Sportabout,18.7,8,360,175,3.15,3.44,17.02,0,0,3,2
-## Valiant,18.1,6,225,105,2.76,3.46,20.22,1,0,3,1
-## Duster 360,14.3,8,360,245,3.21,3.57,15.84,0,0,3,4
-## Merc 240D,24.4,4,146.7,62,3.69,3.19,20,1,0,4,2
-## Merc 230,22.8,4,140.8,95,3.92,3.15,22.9,1,0,4,2
 ```
 
 *Note you might often see the use of a pipe and head. This is to reduce the output's size.*
@@ -106,8 +97,7 @@ head data/mtcars.csv
 	- `*`
 	- `/`
 
-
-```bash
+```{bash eval=FALSE}
 history # prints a list of recent commands
     !2 # re-runs command n2 from the history
 chmod # modify permissions on a file/directory
@@ -218,14 +208,8 @@ There are two main kinds of paths in the filesystem. Absolute and relative. Thes
 
 Wildcards allow you to match all files in a directory by use of `*`; you can also use regex in your bash commands to read in certain files:
 
-
-```bash
+```{bash}
 ls -l ./data/*\.csv # this will print all files that are .csv extensions
-```
-
-```
-## -rw-r--r--@ 1 work  staff  3975 Feb  5  2014 ./data/iris.csv
-## -rw-r--r--@ 1 work  staff  1700 Jul 31  2014 ./data/mtcars.csv
 ```
 
 ## Change directories
@@ -238,8 +222,7 @@ Use `cd ..` in order to move up one directory. The `..` designates the above dir
 
 The command `cp` can be used to copy a file. It takes two arguments the first being the original file and the following the copy. Note that this overwrites any existing files. The `cp` command can also take multiple files and if the last argument is a directory it will copy all files to that directory as shown below.
 
-
-```bash
+```{bash}
 touch playground/original.txt
 mkdir playground/backupdir
 cp playground/original.txt playground/copy.txt
@@ -272,17 +255,8 @@ In order to print just the top of a file use the `head` command. Use the arugmen
 
 In order to get rows or columns from a file use the `cut` command. It has several arguments but a common use looks something like this:
 
-
-```bash
+```{bash}
 cut -f -1-2,5 -d , data/iris.csv | head -n 5 # head used to reduce print size
-```
-
-```
-## "sepal.length","sepal.width","variety"
-## 5.1,3.5,"Setosa"
-## 4.9,3,"Setosa"
-## 4.7,3.2,"Setosa"
-## 4.6,3.1,"Setosa"
 ```
 
 This can be translated as select columns 2 to 5 and columns 8 using a comma as a separator. The `-f`argument means fields, it is used to specify columns and `-d` means delimiter or separator.
@@ -296,32 +270,16 @@ name,age
 
 This would print one column (2):
 
-
-```bash
+```{bash}
 cut -f 2 -d , data/iris.csv | head -n 5
-```
-
-```
-## "sepal.width"
-## 3.5
-## 3
-## 3.2
-## 3.1
 ```
 
 ### `head`/`tail` the middle of a file
 
 This trick might be useful to get lines in an interval. Use `tail` to get the last lines `n` to `...`. Then use a subsequent `head` to get the top of that:
 
-
-```bash
+```{bash}
 tail -n 20 data/iris.csv | head -n 3
-```
-
-```
-## 7.4,2.8,6.1,1.9,"Virginica"
-## 7.9,3.8,6.4,2,"Virginica"
-## 6.4,2.8,5.6,2.2,"Virginica"
 ```
 
 ## `paste` combine data
@@ -332,32 +290,15 @@ Can be used to combine data files.
 
 In order to select text that contains a certain string use the command `grep`. This can be used with a quoted or unquoted argument which is the string to match as such:
 
-
-```bash
+```{bash}
 grep "Virginica" data/iris.csv | head -n 5
-```
-
-```
-## 6.3,3.3,6,2.5,"Virginica"
-## 5.8,2.7,5.1,1.9,"Virginica"
-## 7.1,3,5.9,2.1,"Virginica"
-## 6.3,2.9,5.6,1.8,"Virginica"
-## 6.5,3,5.8,2.2,"Virginica"
 ```
 
 Note that the above command does nothing as it has no text to select from. This command is often used in conjunction with another that has some kind of text or string output. This command can also be used by itself for printing content:
 
-
-```bash
+```{bash}
 grep -c "Virginica" data/iris.csv data/mtcars.csv # -c prints number of matches
 ls -l data | grep ".*\.csv"
-```
-
-```
-## data/iris.csv:50
-## data/mtcars.csv:0
-## -rw-r--r--@ 1 work  staff  3975 Feb  5  2014 iris.csv
-## -rw-r--r--@ 1 work  staff  1700 Jul 31  2014 mtcars.csv
 ```
 
 That command allows us to get all files in a given directory that have the extension `.csv`.
@@ -376,36 +317,17 @@ Here are some common flags with `grep`:
 
 The `sed` command allows you to replace a matching string with another. The syntax requires a regular expression as follows:
 
-
-```bash
+```{bash}
 echo "The duck went to the market." | sed "s/duck/fox/g"
-```
-
-```
-## The fox went to the market.
 ```
 
 ## Outputing to a file aka redirecting outputs
 
 In BASH you don't necessarily have an output argument. Instead the output, which would and could normally go to the console/terminal, can be redirected to a file with use of `>` as a connector; right side argument is a file name:
 
-
-```bash
+```{bash}
 ls -la > playground/list-of-files.txt
 cat playground/list-of-files.txt
-```
-
-```
-## total 96
-## drwxr-xr-x   9 work  staff    288 Mar 14 16:15 .
-## drwxr-xr-x  12 work  staff    384 Mar 14 16:15 ..
-## -rw-r--r--@  1 work  staff   6148 Mar 14 16:13 .DS_Store
-## drwxr-xr-x   4 work  staff    128 Mar 14 15:06 .Rproj.user
-## drwxr-xr-x   4 work  staff    128 Mar 14 16:14 build
-## -rw-r--r--   1 work  staff  32892 Mar 14 16:10 build-md.Rmd
-## -rw-r--r--@  1 work  staff    204 Mar 14 15:44 build-md.Rproj
-## drwxr-xr-x   5 work  staff    160 Mar 14 14:25 data
-## drwxr-xr-x   6 work  staff    192 Mar 14 16:15 playground
 ```
 
 ## `wc` word/character/line count
@@ -416,13 +338,8 @@ This command will let you count the number of works, characters, or lines in a d
 - `-c` character count.
 - `-l` line count.
 
-
-```bash
+```{bash}
 wc -l data/iris.csv
-```
-
-```
-##      150 data/iris.csv
 ```
 
 ## `sort` data
@@ -440,58 +357,21 @@ In order to sort use the command `sort` with flags:
 
 This joins two `.csv` files by column names; we will use this for generating test data:
 
-
-```bash
+```{bash}
 awk 'NF' data/mtcars.csv data/mtcars.csv | sort | head -n 5
 
 awk 'NF' data/mtcars.csv data/mtcars.csv > playground/duplicated.csv
 ```
 
-```
-## AMC Javelin,15.2,8,304,150,3.15,3.435,17.3,0,0,3,2
-## AMC Javelin,15.2,8,304,150,3.15,3.435,17.3,0,0,3,2
-## Cadillac Fleetwood,10.4,8,472,205,2.93,5.25,17.98,0,0,3,4
-## Cadillac Fleetwood,10.4,8,472,205,2.93,5.25,17.98,0,0,3,4
-## Camaro Z28,13.3,8,350,245,3.73,3.84,15.41,0,0,3,4
-```
-
 This command removes adjacent duplicated lines. Bellow is an example:
 
-
-```bash
+```{bash}
 cut -d , -f 1 playground/duplicated.csv | uniq | head -n 10
 ```
 
-```
-## model
-## Mazda RX4
-## Mazda RX4 Wag
-## Datsun 710
-## Hornet 4 Drive
-## Hornet Sportabout
-## Valiant
-## Duster 360
-## Merc 240D
-## Merc 230
-```
 
-
-
-```bash
+```{bash}
 cut -d , -f 1 playground/duplicated.csv | uniq | head -n 10
-```
-
-```
-## model
-## Mazda RX4
-## Mazda RX4 Wag
-## Datsun 710
-## Hornet 4 Drive
-## Hornet Sportabout
-## Valiant
-## Duster 360
-## Merc 240D
-## Merc 230
 ```
 
 Note that as state above this only works on adjacent lines so note that Tiger is left in duplicate where duplicate lines are not adjacent; sort to get strictly unique.
@@ -506,8 +386,7 @@ There are number of different editors that can be used in `Unix`: `nano` and `vi
 
 To use them use the command name and a file as an argument:
 
-
-```bash
+```{bash, eval=FALSE}
 nano data/iris.csv
 ```
 
@@ -529,33 +408,14 @@ In order to store information you can use environment variables; you are storing
 
 Type `set` in the terminal to get a full list (there are many):
 
-
-```bash
+```{bash}
 set | head
-```
-
-```
-## BASH=/bin/bash
-## BASH_ARGC=()
-## BASH_ARGV=()
-## BASH_EXECUTION_STRING='set | head'
-## BASH_LINENO=()
-## BASH_SOURCE=()
-## BASH_VERSINFO=([0]="3" [1]="2" [2]="57" [3]="1" [4]="release" [5]="x86_64-apple-darwin19")
-## BASH_VERSION='3.2.57(1)-release'
-## CLICOLOR_FORCE=1
-## CPLEX_STUDIO_DIR1210=/Applications/CPLEX_Studio1210
 ```
 
 You can print the value of a variable, even user defined ones, by using the `echo` command and the variable preceded by a dollar sign `$`.
 
-
-```bash
+```{bash}
 echo $SHELL
-```
-
-```
-## /bin/zsh
 ```
 
 ## Anatomy of a BASH script
@@ -566,8 +426,7 @@ If you are having issues try to check where it's located using the command: `whi
 
 The next part of the script is your code. 
 
-
-```bash
+```{bash, eval=FALSE}
 #!/bin/bash
 
 # your code goes here
@@ -585,8 +444,7 @@ Run your script by using the command: `bash script.sh`. Or if the file contains 
 
 In order to write shell scripts in a file and use them use the `.sh` extension on a file name. Be sure to change the permissions on the file you created to allow for execution. This may require use of `chmod` as follows:
 
-
-```bash
+```{bash}
 touch playground/script_0.sh
 ls -l playground | grep "script_0.sh"
 
@@ -595,84 +453,31 @@ chmod u+x playground/script_0.sh
 ls -l playground | grep "script_0.sh"
 ```
 
-```
-## -rw-r--r--  1 work  staff     0 Mar 14 16:15 script_0.sh
-## -rwxr--r--  1 work  staff     0 Mar 14 16:15 script_0.sh
-```
-
 You can then run the file using the following syntax in the terminal:
 
-
-```bash
+```{bash}
 echo 'echo "testing; echoing from script"' > playground/script_0.sh
 bash playground/script_0.sh
-```
-
-```
-## testing; echoing from script
 ```
 
 ## Pass filenames to a script
 
 In order to have a script use files we give it as an argument in the terminal we can use the following syntax inside the script: `$@`. This allows the script to the use our arguments in the CLI.
 
-
-```bash
+```{bash}
 echo 'sort $@ | uniq -c' > playground/script_1.sh
 cat playground/script_1.sh
 ```
 
-```
-## sort $@ | uniq -c
-```
-
-
-```bash
+```{bash}
 bash playground/script_1.sh playground/*\.csv
-```
-
-```
-##    2 AMC Javelin,15.2,8,304,150,3.15,3.435,17.3,0,0,3,2
-##    2 Cadillac Fleetwood,10.4,8,472,205,2.93,5.25,17.98,0,0,3,4
-##    2 Camaro Z28,13.3,8,350,245,3.73,3.84,15.41,0,0,3,4
-##    2 Chrysler Imperial,14.7,8,440,230,3.23,5.345,17.42,0,0,3,4
-##    2 Datsun 710,22.8,4,108,93,3.85,2.32,18.61,1,1,4,1
-##    2 Dodge Challenger,15.5,8,318,150,2.76,3.52,16.87,0,0,3,2
-##    2 Duster 360,14.3,8,360,245,3.21,3.57,15.84,0,0,3,4
-##    2 Ferrari Dino,19.7,6,145,175,3.62,2.77,15.5,0,1,5,6
-##    2 Fiat 128,32.4,4,78.7,66,4.08,2.2,19.47,1,1,4,1
-##    2 Fiat X1-9,27.3,4,79,66,4.08,1.935,18.9,1,1,4,1
-##    2 Ford Pantera L,15.8,8,351,264,4.22,3.17,14.5,0,1,5,4
-##    2 Honda Civic,30.4,4,75.7,52,4.93,1.615,18.52,1,1,4,2
-##    2 Hornet 4 Drive,21.4,6,258,110,3.08,3.215,19.44,1,0,3,1
-##    2 Hornet Sportabout,18.7,8,360,175,3.15,3.44,17.02,0,0,3,2
-##    2 Lincoln Continental,10.4,8,460,215,3,5.424,17.82,0,0,3,4
-##    2 Lotus Europa,30.4,4,95.1,113,3.77,1.513,16.9,1,1,5,2
-##    2 Maserati Bora,15,8,301,335,3.54,3.57,14.6,0,1,5,8
-##    2 Mazda RX4 Wag,21,6,160,110,3.9,2.875,17.02,0,1,4,4
-##    2 Mazda RX4,21,6,160,110,3.9,2.62,16.46,0,1,4,4
-##    2 Merc 230,22.8,4,140.8,95,3.92,3.15,22.9,1,0,4,2
-##    2 Merc 240D,24.4,4,146.7,62,3.69,3.19,20,1,0,4,2
-##    2 Merc 280,19.2,6,167.6,123,3.92,3.44,18.3,1,0,4,4
-##    2 Merc 280C,17.8,6,167.6,123,3.92,3.44,18.9,1,0,4,4
-##    2 Merc 450SE,16.4,8,275.8,180,3.07,4.07,17.4,0,0,3,3
-##    2 Merc 450SL,17.3,8,275.8,180,3.07,3.73,17.6,0,0,3,3
-##    2 Merc 450SLC,15.2,8,275.8,180,3.07,3.78,18,0,0,3,3
-##    2 Pontiac Firebird,19.2,8,400,175,3.08,3.845,17.05,0,0,3,2
-##    2 Porsche 914-2,26,4,120.3,91,4.43,2.14,16.7,0,1,5,2
-##    2 Toyota Corolla,33.9,4,71.1,65,4.22,1.835,19.9,1,1,4,1
-##    2 Toyota Corona,21.5,4,120.1,97,3.7,2.465,20.01,1,0,3,1
-##    2 Valiant,18.1,6,225,105,2.76,3.46,20.22,1,0,3,1
-##    2 Volvo 142E,21.4,4,121,109,4.11,2.78,18.6,1,1,4,2
-##    2 model,mpg,cyl,disp,hp,drat,wt,qsec,vs,am,gear,carb
 ```
 
 ## Process arguments in a script
 
 In order to have more complex scripts with more than one input you can use the syntax of `$n`; where n is the number of the argument. Note that an order is applied. The arguments in a script are processed in the same order in which they are sent. So if your script and command are as such then expect the following:
 
-
-```bash
+```{bash}
 echo '{
     echo "Username: $1";
     echo "Age: $2";
@@ -680,18 +485,10 @@ echo '{
 ```
 
 
-
-```bash
+```{bash}
 bash playground/script_2.sh 28 John
 
 bash playground/script_2.sh John 28
-```
-
-```
-## Username: 28
-## Age: John
-## Username: John
-## Age: 28
 ```
 
 ## Special arguments array from script
@@ -711,25 +508,15 @@ There are three kinds of streams of data in BASH:
 
 Sometimes in a programme you can see the following lines at the end of a script:
 
-
-```bash
+```{bash, eval=FALSE}
 2> /dev/null # redirects STDERR to be suppressed
 1> /dev/null # STDOUT is being suppressed
 ```
 
 
-
-```bash
+```{bash}
 cat data/iris.csv 1> playground/std-output-redirection.txt # redirects the standard output to a file
 cat playground/std-output-redirection.txt | head -n 5
-```
-
-```
-## "sepal.length","sepal.width","petal.length","petal.width","variety"
-## 5.1,3.5,1.4,.2,"Setosa"
-## 4.9,3,1.4,.2,"Setosa"
-## 4.7,3.2,1.3,.2,"Setosa"
-## 4.6,3.1,1.5,.2,"Setosa"
 ```
 
 ## Arithmetic and numbers in BASH
@@ -740,22 +527,12 @@ In order to do arithmetic you can use the utility `expr` with the following synt
 
 Note that `expr` cannot handle decimals. In order to solve this you could instead use `bc`, it invokes an interactive calculator. However you can pipe values to it and use it in a similar way to `expr` but with decimals: 
 
-
-```bash
+```{bash, error=TRUE}
 expr 1 + 6.2
 ```
 
-```
-## expr: not a decimal number: '6.2'
-```
-
-
-```bash
+```{bash}
 echo "1 + 6.2" | bc
-```
-
-```
-## 7.2
 ```
 
 Note `bc` also takes an argument for stipulating how many decimal places to return - `scale`. By default it returns whole numbers rounding.
@@ -769,14 +546,9 @@ When using numbers for example assigning them to a variable name be sure not to 
 
 In order to create a variable use the following syntax. Note you set the variable with no spaces between the variable name and the value: `var_name=value`. Then you can call the variable by use of a dollar sign `$` as such:
 
-
-```bash
+```{bash}
 test="A value or file input of some sort."
 echo $test
-```
-
-```
-## A value or file input of some sort.
 ```
 
 ## Objects in BASH: arrays
@@ -787,24 +559,18 @@ There are two types of arrays in BASH: numerical-indexed arrays or list with key
 
 There are two ways to create a numerical-indexed arrays:
 
-
-```bash
+```{bash}
 declare -a my_array # creates an empty array
 my_array=(1 2 3) # creates an array of 1, 2, 3
 
 echo ${my_array[@]}
 ```
 
-```
-## 1 2 3
-```
-
 Note the separation with spaces, *not* commas.
 
 In order to print you array you can print all elements by use of the `{array[@]}` syntax. Like so:
 
-
-```bash
+```{bash}
 declare -a my_array
 my_array=(1 2 3)
 
@@ -812,15 +578,9 @@ echo ${my_array[@]} # prints all elements
 echo ${#my_array[@]} # prints the length 
 ```
 
-```
-## 1 2 3
-## 3
-```
-
 In order to access elements of array use `[]` brackets. As stated before BASH is 0 indexed. Elements can be changed by using the bracket notation and setting the value.
 
-
-```bash
+```{bash}
 declare -a my_array
 my_array=(1 2 3)
 
@@ -830,33 +590,22 @@ my_array[1]=10
 echo ${my_array[@]}
 ```
 
-```
-## 3
-## 1 10 3
-```
-
 **Again please note that BASH is often 0 indexed, but MacOS's recent implementation of `zsh` is indeed 1 indexed.**
 
 In order to slice a part of an array or get things in a certain interval use the syntax: `array[@]:n:m`.
 
-
-```bash
+```{bash}
 declare -a my_array
 my_array=(1 2 3 4 5 6 7 8 9 10)
 
 echo ${my_array[@]:2:5}
 ```
 
-```
-## 3 4 5 6 7
-```
-
 Note that `m` is the number of elements to return after the starting index `n`.
 
 Appending to an array uses the operator `+=`:
 
-
-```bash
+```{bash}
 declare -a my_array
 my_array=(1 2 3 4 5 6 7 8 9)
 my_array+=(10) # note the use of parenthesis
@@ -868,17 +617,11 @@ my_array+=10 # not using parenthesis yields different results
 echo ${my_array[@]}
 ```
 
-```
-## 1 2 3 4 5 6 7 8 9 10
-## 110 2 3 4 5 6 7 8 9 10
-```
-
 Note the difference in results; however, this does not occur in `zsh`. In `zsh` you get the same result as when using parenthesis: `1 2 3 4 5 6 7 8 9 10`.
 
 Here is a quick example using ararys, backticks (SHELL in SHELL), pipes, and arithmetic all in one:
 
-
-```bash
+```{bash}
 declare -a my_array_a
 my_array_a=(1 2 3 4 5 6 7 8 9 10)
 declare -a my_array_b
@@ -889,129 +632,63 @@ declare -a my_array_final=`echo "scale=3; (${my_array_a[1]} + ${my_array_b[2]}) 
 echo ${my_array_final[@]}
 ```
 
-```
-## 18.333
-```
-
 ### Associative arrays; key-value paired
 
 *Note this feature is only available in BASH v4+.*
 
-
-```bash
+```{bash, engine.opts='-l'}
 bash --version
-```
-
-```
-## GNU bash, version 5.1.4(1)-release (x86_64-apple-darwin19.6.0)
-## Copyright (C) 2020 Free Software Foundation, Inc.
-## License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-## 
-## This is free software; you are free to change and redistribute it.
-## There is NO WARRANTY, to the extent permitted by law.
 ```
 
 To create an associative array you must use the `declare` syntax. Either declare an empty array first and then add key-values or declare with key-value all at once.
 
 Set keys with square brackets `[]` and values after the equals `=` sign. Multiple elements at once can be declared.
 
-
-```bash
+```{bash, engine.opts='-l'}
 declare -A friends_list # declare first
 friends_list_2_step=([name]="Guy" [age]=21) # add elements
 echo ${friends_list_2_step[@]}
 ```
 
-```
-## bash: line 0: declare: -A: invalid option
-## declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
-## 21
-```
 
-
-
-```bash
+```{bash}
 declare -A friends_list_1_step=([name]="Guy" [age]=21) # all at once
 echo ${friends_list_1_step[@]}
 ```
 
-```
-## bash: line 0: declare: -A: invalid option
-## declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
-## 21
-```
-
 Associative arrays' keys can all be got with the following syntax `!`:
 
-
-```bash
+```{bash}
 declare -A friends_list_1_step=([name]="Guy" [age]=21) # all at once
 echo ${!friends_list[@]} # return all keys
-```
-
-```
-## bash: line 0: declare: -A: invalid option
-## declare: usage: declare [-afFirtx] [-p] [name[=value] ...]
 ```
 
 ## `for` loops
 
 The structure and syntax of a for loop in BASH is as follows:
 
-
-```bash
+```{bash}
 for item in list1 list2 list3; do echo $item; done
 
 for item in playground/*; do ls -l $item; done
-```
-
-```
-## list1
-## list2
-## list3
-## total 0
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 copy.txt
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 original.txt
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 playground/copy.txt
-## -rw-r--r--  1 work  staff  3400 Mar 14 16:15 playground/duplicated.csv
-## -rw-r--r--  1 work  staff  509 Mar 14 16:15 playground/list-of-files.txt
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 playground/original.txt
-## -rwxr--r--  1 work  staff  36 Mar 14 16:15 playground/script_0.sh
-## -rw-r--r--  1 work  staff  18 Mar 14 16:15 playground/script_1.sh
-## -rw-r--r--  1 work  staff  49 Mar 14 16:15 playground/script_2.sh
-## -rw-r--r--  1 work  staff  3975 Mar 14 16:15 playground/std-output-redirection.txt
 ```
 
 Note that a variable is defined and then called.
 
 A multi-line syntax for `for` loops in a script is as follows:
 
-
-```bash
+```{bash}
 for item in playground/* # this * syntax explained later
 do
     echo "Testing: $item"
 done
 ```
 
-```
-## Testing: playground/backupdir
-## Testing: playground/copy.txt
-## Testing: playground/duplicated.csv
-## Testing: playground/list-of-files.txt
-## Testing: playground/original.txt
-## Testing: playground/script_0.sh
-## Testing: playground/script_1.sh
-## Testing: playground/script_2.sh
-## Testing: playground/std-output-redirection.txt
-```
-
 To create a numeric range to iterate through you can use something called brace extension. This is done with curly brackets: `{start..stop..increment}` by default this increments by 1 if you do not specify the third argument.
 
 You can also use three expression syntax using parenthesis: `((x=2;x<=10;x+=3))`. This might seem very familiar if you are experiences with `JavaScript`.
 
-
-```bash
+```{bash}
 # brace extensions
 for x in {1..10..3}
 do
@@ -1025,17 +702,9 @@ do
 done
 ```
 
-```
-## {1..10..3}
-## 2
-## 5
-## 8
-```
-
 You can also use something called glob expansions to iterate in place, this uses the `*` asterisk. This can be used for example to read in all files from a directory at once:
 
-
-```bash
+```{bash}
 # read in all files from directory
 for file in playground/*\.txt # only matches .txt files
 do
@@ -1043,39 +712,20 @@ do
 done
 ```
 
-```
-## total 96
-## drwxr-xr-x   9 work  staff    288 Mar 14 16:15 .
-## drwxr-xr-x  12 work  staff    384 Mar 14 16:15 ..
-## -rw-r--r--@  1 work  staff   6148 Mar 14 16:13 .DS_Store
-## drwxr-xr-x   4 work  staff    128 Mar 14 15:06 .Rproj.user
-## "sepal.length","sepal.width","petal.length","petal.width","variety"
-## 5.1,3.5,1.4,.2,"Setosa"
-## 4.9,3,1.4,.2,"Setosa"
-## 4.7,3.2,1.3,.2,"Setosa"
-## 4.6,3.1,1.5,.2,"Setosa"
-```
-
 A nested SHELL cna also be used to create a `for` loop. This can be useful for matching specific files on a condition or otherwise then passing the result to the `for` above loop for more work:
 
-
-```bash
+```{bash}
 for file in `ls playground/ | grep -i 'duplicated'`
 do
     echo $file
 done
 ```
 
-```
-## duplicated.csv
-```
-
 ## `while` loops
 
 These are similar to `for` loops but they have a condition that is tested at each iteration. This is useful if you have a variable that is being modified each loop that needs to be checked. Iterations continue until the conidition is no longer met:
 
-
-```bash
+```{bash}
 x=1
 while [ $x -le 10 ]
 do
@@ -1084,27 +734,13 @@ do
 done
 ```
 
-```
-## 1
-## 2
-## 3
-## 4
-## 5
-## 6
-## 7
-## 8
-## 9
-## 10
-```
-
 **BEWARE OF INFINITE LOOPS; MODIFY YOUR CONDITIONS INSIDE WHILE LOOPS**
 
 ## `if` statements and conditional flow
 
 An if statement can be written with the following syntax; note that when using a numerical condition use double parenthesis `(())` or you can use `[]` brackets with a flag:
 
-
-```bash
+```{bash, eval=FALSE}
 if [ boolean_condition ]; then # spaces!!! [ logical ];
     # CODE
 else
@@ -1113,8 +749,7 @@ fi # finishes an if statement
 ```
 
 
-
-```bash
+```{bash}
 var="Yes"
 if [ $var == "No" ]; then
     echo "You are authorised."
@@ -1135,12 +770,6 @@ if [ $var -gt 10 ]; then
 else
     echo "It is smaller."
 fi
-```
-
-```
-## You may not proceed.
-## It is larger.
-## It is larger.
 ```
 
 The possible flags for use as comparators are:
@@ -1166,8 +795,7 @@ You can use multiple conditions with and/or notations:
 
 Here is a demonstration of some chained conditions; note you can also use a double bracket syntax for a more simple expression:
 
-
-```bash
+```{bash, eval=FALSE}
 var=1
 if [ $var -gt 1 ] && [ playground/file.txt -w ]; then
     echo "Memory states greater than 1 with a value of $var \n and the files are writable."
@@ -1192,8 +820,7 @@ fi
 
 Case statements are light in syntax than `if` statements. This is often useful when you have multiple conditions and actions to take. These can technically be done with `if` statements but case statements are useful.
 
-
-```bash
+```{bash, eval=FALSE}
 # case statement
 case "string_or_var" in # pass string or variable; even a nested SHELL
     CONDITION_1)
@@ -1207,8 +834,7 @@ esac # case backwards
 
 Here is an example demonstrating an `if` statement refactored as a `case` statement:
 
-
-```bash
+```{bash, eval=FALSE}
 # complicated if statement
 if grep -q "House Cat" $1; then
     mv $1 mammal/
@@ -1234,8 +860,7 @@ esac
 ```
 
 
-
-```bash
+```{bash}
 # case statement matching days of week
 case "Tuesday" in
   # weekdays
@@ -1250,16 +875,11 @@ case "Tuesday" in
 esac
 ```
 
-```
-## Weekday
-```
-
 ## `function`s in BASH
 
 Functions allow you to write code that can be re-used - modular code. There are two main syntax for functions in BASH as follows:
 
-
-```bash
+```{bash}
 func_name () {
     # code goes here
     return # something
@@ -1283,8 +903,7 @@ Note that when building functions you must take into consideration the scope of 
 
 To restrict a scope use the `local` keyword:
 
-
-```bash
+```{bash}
 function a_func () {
     local var="Something" # restrict to local scope
 }
@@ -1299,8 +918,7 @@ We have some options:
 1. Assign results to a global variable.
 1. `echo` in the last line and capture it in a variable using a nested SHELL.
 
-
-```bash
+```{bash, error=TRUE}
 function func {
     fake_command # this should err
 }
@@ -1321,14 +939,6 @@ saved_var=`func_2 21 5`
 echo "The result is $saved_var"
 ```
 
-```
-## bash: line 1: fake_command: command not found
-## 127
-## 0
-## bash: line 9: 127: command not found
-## The result is 800.00
-```
-
 # Automation and `cron` jobs
 
 You can schedule a script to be run on a schedule. This is done through a utility called `cron`. This helps to optimise your time and resources. The use `cron` is an essential skill.
@@ -1341,8 +951,7 @@ Call `crontab -l` in order to see what jobs are schedule by the user.
 
 You can get an idea of how `cronjobs` work by the following structure:
 
-
-```txt
+```{txt}
 # ┌───────────── minute (0 - 59)
 # │ ┌───────────── hour (0 - 23)
 # │ │ ┌───────────── day of the month (1 - 31)
@@ -1360,8 +969,7 @@ You can get an idea of how `cronjobs` work by the following structure:
 
 In a `crontab` file you have many jobs - one per line. The starts are one for each unit of time: min, hour, day of month, month, day of the week. Note that you replace a placeholder start with what values you desire. Here is a quick example:
 
-
-```bash
+```{bash, eval=FALSE}
 15 2 * * * bash script.sh
 ```
 
@@ -1371,15 +979,13 @@ This means that the job runs every day at 0215 (2:15 a.m.).
 
 You can run programmes at `t` time intervals:
 
-
-```bash
+```{bash, eval=FALSE}
 10,20,40 * * * * bash script.sh
 ```
 
 The above job would run at 10, 20, and 40 minutes every hour. You can also use a `/` for every `t` increment.
 
-
-```bash
+```{bash, eval=FALSE}
 */5 * * * * bash script.sh
 ```
 
@@ -1406,16 +1012,6 @@ Change BASH version inside R-Studio chunks explained:
 1. Export the path with the following syntax inside this file: `export PATH="$PATH:/usr/local/bin/bash"`.
 1. Use the `engine.opts='-l'` in your chunk as shown below:
 
-
-```bash
+```{bash, engine.opts='-l'}
 bash --version
-```
-
-```
-## GNU bash, version 5.1.4(1)-release (x86_64-apple-darwin19.6.0)
-## Copyright (C) 2020 Free Software Foundation, Inc.
-## License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-## 
-## This is free software; you are free to change and redistribute it.
-## There is NO WARRANTY, to the extent permitted by law.
 ```

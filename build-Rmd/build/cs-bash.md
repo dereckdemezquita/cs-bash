@@ -17,7 +17,11 @@ editor_options:
   chunk_output_type: inline
 ---
 
-# cs-bash <img src="./figures/project-logo.png" width="100" align="right">
+
+
+
+
+# cs-bash
 
 A primer on BASH scripting and Linux systems, will make it into a course for: [derecksnotes.com](www.derecksnotes.com)
 
