@@ -872,6 +872,8 @@ You can get an idea of how `cronjobs` work by the following structure:
 
 *Source: [wikipedia - cron](https://en.wikipedia.org/wiki/Cron)*
 
+**Note in some `unix` systems Sunday can be designated as 0 not 7.**
+
 In a `crontab` file you have many jobs - one per line. The starts are one for each unit of time: min, hour, day of month, month, day of the week. Note that you replace a placeholder start with what values you desire. Here is a quick example:
 
 ```cron
@@ -902,3 +904,4 @@ The above would run every five minutes every day every hour.
 1. Create the job's command: `*/5 * * * * bash script.sh`.
 
 To check that the job is scheduled and running check with `crontab -l`.
+
