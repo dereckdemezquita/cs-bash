@@ -451,11 +451,11 @@ Sometimes in a programme you can see the following lines at the end of a script:
 cat file.txt 1> std-output-redirection.txt # redirects the standard output to a file
 ```
 
-## Arithmatic and numbers in BASH
+## Arithmetic and numbers in BASH
 
-Numbers are not natively supported in BASH; in R or JS for example you could type something like: `3 + 2` in a console and the arithmatic would return a result. In BASH this does not work. 
+Numbers are not natively supported in BASH; in R or JS for example you could type something like: `3 + 2` in a console and the arithmetic would return a result. In BASH this does not work. 
 
-In order to do arithmatic you can use the utility `expr` with the following syntax: `expr 2 + 2`.
+In order to do arithmetic you can use the utility `expr` with the following syntax: `expr 2 + 2`.
 
 Note that `expr` cannot handle decimals. In order to solve this you could instead use `bc`, it invokes an interactive calculator. However you can pipe values to it and use it in a similar way to `expr` but with decimals: 
 
