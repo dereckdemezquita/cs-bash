@@ -5,7 +5,7 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 # Bash quick start; basic commands
 
 - BASH is indexed at 0.
-- `!#/usr/bash` A "shebang" should be included in each script file to point to the interpreter.
+- `#!/bin/bash` A "shebang" should be included in each script file to point to the interpreter.
     - Or use: `bash somescript.sh`.
 - `'sometext'` single quotes means the SHELL understands this literally.
 - `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
@@ -14,6 +14,25 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 - `date` returns the current date and time: `date Sat 13 Mar 2021 15:56:49 PST`.
 
 - Check BASH version with `bash --version`.
+
+```bash
+# assignement
+=
++=
+
+# comparators
+==
+!=
+>
+<
+<=
+>=
+
+# arithmetic
++
+-
+*
+```
 
 ```bash
 history # prints a list of recent commands
@@ -56,6 +75,12 @@ echo ${my_array[@]} # prints all elements
 echo ${#my_arary[@]} # prints the length 
 array[@]:n:m # slice an array
 echo ${!friends_list[@]} # return all keys of associative list
+# if statements
+if [ boolean_condition ]; then
+    # CODE
+else
+    # OTHER CODE
+fi # finishes an if statement
 ```
 
 `|` the pipe command separator allows the passsage of one output to another command. Chains can be built in this way for example: `ls -l | grep ".*\.file-extension` that command allows one to find all files from `ls -l` that have the given extension.
@@ -217,6 +242,7 @@ That command allows us to get all files in a given directory that have the exten
 
 Here are some common flags with `grep`:
 
+- `-q` makes it quiet so it returns simply `true`/`false`.
 - `-c` print the number of matching lines per file.
 - `-h` don't print names of files when searching.
 - `-i` ignore capitalisations ("Name" and "name" treated as matches).
@@ -338,14 +364,14 @@ echo $SHELL
 
 ## Anatomy of a BASH script
 
-The first part of a BASH script is a "shebang" often seen as this: `#!/usr/bash` on the very first line. This is so that the interpreter knows to use BASH and where it's located on your machine.
+The first part of a BASH script is a "shebang" often seen as this: `#!/bin/bash` on the very first line. This is so that the interpreter knows to use BASH and where it's located on your machine.
 
 If you are having issues try to check where it's located using the command: `which bash`.
 
 The next part of the script is your code. 
 
 ```bash
-#!/usr/bash
+#!/bin/bash
 
 # your code goes here
 for item in item1 item2 item3
@@ -474,6 +500,12 @@ my_array+=10 # not using parenthesis yields different results
 
 Note the difference in results; however, this does not occur in `zsh`. In `zsh` you get the same result as when using parenthesis: `1 2 3 4 5 6 7 8 9 10`.
 
+Here is a quick example using ararys, backticks (SHELL in SHELL), pipes, and arithmetic all in one:
+
+```bash
+decalre -a my_array=`echo "scale=3; (${other_array[1]} + ${other_array[2]}) + ${other_array[3]} / 3" | bc`
+```
+
 ### Associative arrays; key-value paired
 
 *Note this feature is only available in BASH v4+.*
@@ -519,6 +551,83 @@ for item in $@
 do
     echo "Testing: $item"
 done
+```
+
+## `if` statements and conditional flow
+
+An if statement can be written with the following syntax; note that when using a numerical condition use double parenthesis `(())` or you can use `[]` brackets with a flag:
+
+```bash
+if [ boolean_condition ]; then # spaces!!! [ logical ];
+    # CODE
+else
+    # OTHER CODE
+fi # finishes an if statement
+
+var="Yes"
+if [ $var == "No" ]; then
+    echo "You are authorised."
+else
+    echo "You may not proceed."
+fi
+
+var=20
+if (( $var > 10 )); then
+    echo "It is larger."
+else
+    echo "It is smaller."
+fi
+
+var=20
+if [ $var -gt 10 ]; then
+    echo "It is larger."
+else
+    echo "It is smaller."
+fi
+```
+
+The possible flags for use as comparators are:
+
+- -eq equal to.
+- -ne not equal to.
+- -lt less than.
+- -le less than or equal to.
+- -gt greater than.
+- -ge greater than or equal to.
+
+You can also file related flags for checking things in the system:
+
+- -e does a file exist.
+- -s if the file has a size larger than 0.
+- -r if the file is readable.
+- -w if the file is writable.
+
+You can use multiple conditions with and/or notations:
+
+- `&&`
+- `||`
+
+Here is a demonstration of some chained conditions; note you can also use a double bracket syntax for a more simple expression:
+
+```bash
+var=1
+if [ $var -gt 1 ] && [ Documents/file.txt -w ]; then
+    echo "Memory states greater than 1 with a value of $var \n and the files are writable."
+fi
+
+if [[ 2 -gt 1 && Documents/file.txt -w ]]; then
+    echo "Memory states greater than 1 with a value of $var \n and the files are writable."
+fi
+
+# you can also use other CLI programmes inside
+if grep -q expression file.txt; then 
+    echo "Expression found inside."
+fi
+
+# a SHELL can be used inside the statement too
+if `grep -q expression file.txt`; then 
+    echo "Expression found inside."
+fi
 ```
 
 ## Streams in BASH
