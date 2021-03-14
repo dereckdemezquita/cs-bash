@@ -4,6 +4,15 @@ A primer on BASH scripting and Linux systems, will make it into a course for: [d
 
 # Bash quick start; basic commands
 
+- BASH is indexed at 0.
+- `!#/usr/bash` A "shebang" should be included in each script file to point to the interpreter.
+    - Or use: `bash somescript.sh`.
+- `'sometext'` single quotes means the SHELL understands this literally.
+- `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
+- \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
+    - A newer syntax for this same method is `$(some_command)`.
+- `date` returns the current date and time: `date Sat 13 Mar 2021 15:56:49 PST`.
+
 ```bash
 history # prints a list of recent commands
     !2 # re-runs command n2 from the history
@@ -84,6 +93,16 @@ A file and directory can be defined as such:
 
 - Never use spaces in file names; use underscores `_`.
 - `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
+
+Quotes are understood a little different depending on which kind are used: double `""` or single `''`. 
+
+- `'sometext'` single quotes means the SHELL understands this literally.
+- `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
+
+Backticks create a SHELL within a SHELL. This syntax can be very powerful and useful.
+
+- \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
+    - A newer syntax for this same method is `$(some_command)`.
 
 ## Absolute vs relative paths
 
@@ -372,9 +391,16 @@ Username: John
 Age: 28
 ```
 
+## Special arguments array from script
+
+When passing multiple arguments to a script - these are saved to a `ARGV` variable. This has some special properties and can even be printed out.
+
+- `$@`/`$*` prints out all arguments array.
+- `$#` prints the length of the array of arguments
+
 ## Storing variables
 
-In order to create a variable use the following syntax.
+In order to create a variable use the following syntax. Note you set the variable with no spaces between the variable name and the value: `var_name=value`. Then you can call the variable by use of a dollar sign `$` as such:
 
 ```bash
 test="A value or file input of some sort."
@@ -425,6 +451,23 @@ Sometimes in a programme you can see the following lines at the end of a script:
 cat file.txt 1> std-output-redirection.txt # redirects the standard output to a file
 ```
 
+## Arithmatic and numbers in BASH
 
+Numbers are not natively supported in BASH; in R or JS for example you could type something like: `3 + 2` in a console and the arithmatic would return a result. In BASH this does not work. 
 
+In order to do arithmatic you can use the utility `expr` with the following syntax: `expr 2 + 2`.
 
+Note that `expr` cannot handle decimals. In order to solve this you could instead use `bc`, it invokes an interactive calculator. However you can pipe values to it and use it in a similar way to `expr` but with decimals: 
+
+```bash
+expr 1 + 6.2
+expr: not a decimal number: '6.2'
+
+echo "1 + 6.2" | bc
+```
+
+Note `bc` also takes an argument for stipulating how many decimal places to return - `scale`. By default it returns whole numbers rounding.
+
+When using numbers for example assigning them to a variable name be sure not to assign them as a string with quotes. Keep them as numbers in order to be able to use them as number types later on.
+
+*You might see some people use a double paranethesis method for invoking `expr`: `$((1 + 2))`.*
