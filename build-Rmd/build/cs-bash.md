@@ -1,13 +1,14 @@
 ---
 title: "BASH scripting"
 author: "Dereck de Mézquita"
-date: "14 March, 2021"
+date: "15 March, 2021"
 knit: (function(inputFile, encoding) { 
       rmarkdown::render(inputFile,
                         encoding=encoding, 
                         output_file=file.path(dirname(inputFile), "./build/", "/cs-bash.html")) })
 output:
-  html_document: 
+  html_document:
+    css: "styles.css"
     fig_caption: yes
     keep_md: yes
     number_sections: yes
@@ -75,7 +76,35 @@ head data/mtcars.csv
 
 *Note you might often see the use of a pipe and head. This is to reduce the output's size.*
 
+You can download the data for this course by searching in the data directory of the associated github repo: [dereckdemezquita/cs-bash](https://github.com/dereckdemezquita/cs-bash).
+
 # Bash quick start; basic commands
+
+BASH is a 0 indexed language. This means that arrays start counting from 0. Thus, the first item in a list is 0, then 1, then `n - 1` for the ending item.
+
+*Note you can use the tab key to autocomplete file and directory names.*
+
+The filesystem manages files and directories in the computer system. These are defined by absoulute paths to the system's root. The root being the lowest level directory holding all other system files designated by `/`.
+
+A file and directory can be defined as such: 
+
+- `/home/usr/username/Documents/`
+- `/home/usr/username/Documents/somefile.txt`
+
+- Never use spaces in file names; use underscores `_`.
+- `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
+
+Quotes are understood a little different depending on which kind are used: double `""` or single `''`. 
+
+- `'sometext'` single quotes means the SHELL understands this literally.
+- `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
+
+Backticks create a SHELL within a SHELL. This syntax can be very powerful and useful.
+
+- \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
+    - A newer syntax for this same method is `$(some_command)`.
+    
+<br>
 
 - BASH is indexed at 0.
 - `#!/bin/bash` A "shebang" should be included in each script file to point to the interpreter.
@@ -109,6 +138,30 @@ head data/mtcars.csv
 	- `-`
 	- `*`
 	- `/`
+
+
+
+```bash
+w # shows list of connected users.
+whoami # shows the name of the current user.
+uname -a # shows kernal information (Linux, Darwin for OSX).
+date # shows current date and time.
+
+# ctrl + c abort execution.
+# ctrl + z pause execution.
+```
+
+```
+## 20:08  up 24 mins, 4 users, load averages: 2.01 2.12 2.61
+## USER     TTY      FROM              LOGIN@  IDLE WHAT
+## work     console  -                19:44      23 -
+## work     s000     -                19:45      22 ping google.com
+## work     s005     -                19:45      23 -bash
+## work     s006     -                19:45      23 -bash
+## work
+## Darwin derecks-MBP-2.attlocal.net 19.6.0 Darwin Kernel Version 19.6.0: Thu Oct 29 22:56:45 PDT 2020; root:xnu-6153.141.2.2~1/RELEASE_X86_64 x86_64
+## Mon Mar 15 20:08:24 PDT 2021
+```
 
 
 ```bash
@@ -176,47 +229,214 @@ Note the following for help:
 
 # Introduction to BASH scripting
 
+A UNIX shell is a command line interface/interpreter or shell that allows one to use a command line to manipulate UNIX-like operating systems. It is a both an interactive command language and a scripting language. You can both use it as a console, and write and save scripts to be run later.
+
 Before computers had GUIs they had command-line interfaces. The shell is an interface through which we can run other programmes and points their output to a human readable form; it then prompts for the next command. 
 
-What is BASH and why use it? BASH stands for "Bourne Again Shell". It is a shell that was developed in the 80's. It is often the default for many Unix systems such as Linux and MacOS systems; MacOS has recently switched to zsh - a variant of BASH.
+What is BASH and why use it? BASH stands for "Bourne Again Shell". It is a shell that was developed in the 80's. BASH is used by the operating system to control the execution of shell scripts. Operating systems like, OSX and Linux are based on UNIX. The operating system manages memory and computing power (CPU, GPU), devices (screen, keyboard), and manages users. Operating systems allows us to run computer programmes and the graphical user interface (GUI).
 
-**Note that in MacOS's `zsh` implementation `zsh` is 1 indexed.**
+<div class="warning">
+	MacOS has recently switched to zsh - a variant of BASH. - Note that in MacOS's `zsh` implementation `zsh` is 1 indexed.
+</div>
 
-BASH can be used to run programmes and data pipelines or automate repetitive tasks. All major cloud computing systems have a CLI to their products: AWS, Google Cloud, Microsoft Azure.
+<div class="note">
+    We will learn: directory structure, shell (command lin interface), philosphy (multiuser/multitasking), flexibility; everything is a file.
+</div>
 
-Learning and being capable of using SHELL scripting and BASH is an essential skill.
+BASH can be used to run programmes and data pipelines or automate repetitive tasks. All major cloud computing systems have a CLI to their products: AWS, Google Cloud, Microsoft Azure. Learning and being capable of using SHELL scripting and BASH is an essential skill.
 
-BASH scripting is the process whereby a programming writes a BASH script in a file and saves it. This file can then be executed and even repeatedly used for convience. 
+BASH scripting is the process whereby a programmer writes a BASH script in a file and saves it. This file can then be executed and even repeatedly used for convenience. 
 
-## Basic tips
+## History
 
-BASH is a 0 indexed language. This means that arrays start counting from 0. Thus, the first item in a list is 0, then 1, then `n - 1` for the ending item.
+The origins of UNIX start with multics created at MIT in the 60s, this was then licenced by AT&T in the 70s. The GNU project in the 80s developed the project. Finally Linux was created by Linus Torvalds in the 90s.
 
-*Note you can use the tab key to autocomplete file and directory names.*
+The Linux operating system has by far gone on to become the most succesful and widely used operating system in the world. Today it runs on anything from personal machines, industrial machines, and a majority of internet servers.
 
-The filesystem manages files and directories in the computer system. These are defined by absoulute paths to the system's root. The root being the lowest level directory holding all other system files designated by `/`.
+## Architecture of UNIX
 
-A file and directory can be defined as such: 
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/1-os-structure.jpg">
+    <figcaption>A representation of an OS's structure.</figcaption>
+</figure>
 
-- `/home/usr/username/Documents/`
-- `/home/usr/username/Documents/somefile.txt`
+Computer programmes, including GUI ones, access the computer's hardware through the kernal and system calls.
 
-- Never use spaces in file names; use underscores `_`.
-- `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/2-file-structure.jpg">
+    <figcaption>A representation of an OS's file tree.</figcaption>
+</figure>
 
-Quotes are understood a little different depending on which kind are used: double `""` or single `''`. 
+The computer's storage is the separated into various parts and compartments, some accessible to a basic user and some not. The `/bin`, `/dev`, `/etc`, are mostly files used by the system and the programmes installed on the machine. `/usr` contains common user system files for programmes installed on the machine; this reduces redundancies and saves storage. Finally the `/home` directory contains the different user's files; on MacOS machines.
 
-- `'sometext'` single quotes means the SHELL understands this literally.
-- `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
-
-Backticks create a SHELL within a SHELL. This syntax can be very powerful and useful.
-
-- \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
-    - A newer syntax for this same method is `$(some_command)`.
+There is only one root in UNIX. Called by the `/`. Every path starts from the root.
 
 ## Absolute vs relative paths
 
 There are two main kinds of paths in the filesystem. Absolute and relative. These are defined by the first character of the path; paths begining with `/` are absolute. These paths can be from anywhere in the file system and will always use as a starting point the root directory of the computer. A relative path may be defined by either `./` or a directory name at the begining of the path. These will only work when inside the directory above the rest of the path.
+
+## The SHELL
+
+In essence the shell is a programme like any other, but this particular programme allows us access to the machine's hardware through commands and scripts.
+
+<div class="note">
+    You can launch the terminal in mac by searching your machine for an application named "Terminal". It is often found in the applications directory in the folder Utilities.
+</div>
+
+It is an interface where we can give commands, a command line type of interface. The command line interface interprets what the user types. A command can be: a built-in shell command (`ls`, `pwd`, `mkdir`, etc...), an executable script, or even a compiled programme.
+
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/3-mac-terminal.png">
+    <figcaption>The typical Mac terminal.</figcaption>
+</figure>
+
+As stated before there are different implementations of the shell; `sh`, `BASH`, `csh`, `tsh`, `zsh`...
+
+<div class="warning">
+    The Mac terminal uses the `zsh` implimentation, as seen in the terminal's name up top in the info bar.
+</div>
+
+
+## Logging in and out
+
+You might find yourself using `BASH` or other on a local machine as well as remotely. Logging and logging out might be required follow these steps to do so:
+
+
+```bash
+login # logs in locally
+
+ssh user@server # ssh command for server use
+logout # logs you out of your session
+```
+
+## Running and managing running commands
+
+Here are some basic commands that are often used. These get you some information about the system you're currently logged into.
+
+- `w` shows list of connected users.
+- `whoami` shows the name of the current user.
+- `uname -a` shows kernal information (Linux, Darwin for OSX).
+- `date` shows current date and time.
+
+<div class="note">
+	To quit a command or abort execution you can used: `ctrl + c`.
+</div>
+
+<div class="note">
+	To pause execution of a command you can use: `ctrl + z`.
+</div>
+
+To go back to the programme type, `fg`, to let the programme resume in the background type `bg`. This allows it to push the execution to the background and let you use the shell for other things meanwhile.
+
+So to restate: pause then send to background, or type the command and leave a space and type `-&` this will directly send the execution to the background. Look to the command below to view all commands currently running:
+
+
+```bash
+ps -u "Dereck" | head # this command shows all programmes currently running for a given user
+```
+
+```
+##   UID   PID TTY           TIME CMD
+##   501   751 ??         0:00.01 /usr/sbin/cfprefsd agent
+##   501   752 ??         0:00.08 /usr/libexec/lsd
+##   501   753 ??         0:00.06 /usr/libexec/secd
+##   501   754 ??         0:00.02 /usr/sbin/distnoted agent
+##   501   755 ??         0:00.23 /usr/libexec/trustd --agent
+```
+
+
+If you want to distinguish the programmes running on your user then do `ps -u $(whoami)`; more modern syntax shown below. This will show the ID "PID" of the programme and the time also with the command. As seen above a quick example of what was currently running on my machine.
+
+
+```bash
+ps -u `whoami` | head
+```
+
+```
+##   UID   PID TTY           TIME CMD
+##   502   319 ??         0:00.07 /System/Library/Frameworks/LocalAuthentication.framework/Support/coreauthd
+##   502   320 ??         0:01.19 /usr/sbin/cfprefsd agent
+##   502   322 ??         0:01.02 /usr/libexec/UserEventAgent (Aqua)
+##   502   324 ??         0:00.78 /usr/sbin/distnoted agent
+##   502   325 ??         0:00.24 /usr/sbin/universalaccessd launchd -s
+##   502   326 ??         0:00.02 /System/Library/PrivateFrameworks/CloudServices.framework/Helpers/com.apple.sbd
+##   502   327 ??         0:00.57 /usr/libexec/lsd
+##   502   328 ??         0:00.83 /usr/libexec/knowledge-agent
+##   502   329 ??         0:05.07 /usr/libexec/trustd --agent
+```
+
+To kill the execution of a specific command use the above to find the "PID" then use it as follows.
+
+
+```bash
+kill -9 PID # kills programme with given PID
+
+# Flag: -9 KILL (non-catchable, non-ignorable kill)
+```
+
+## File permissions
+
+On a LINUX system permissions are granted to specific users. Here is a quick summary of the different possibilities. This is seen when we do `ls -l` this will give the permissions and details. They are separated into three groups.
+
+
+```bash
+touch playground/test_permissions.txt
+ls -l | head
+chmod u+x playground/test_permissions.txt
+ls -l | head
+```
+
+```
+## total 112
+## drwxr-xr-x  5 work  staff    160 Mar 15 18:21 build
+## -rw-r--r--  1 work  staff  46332 Mar 15 20:08 build-Rmd.Rmd
+## -rw-r--r--@ 1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
+## drwxr-xr-x  9 work  staff    288 Mar 15 19:50 data
+## drwxr-xr-x+ 8 work  staff    256 Mar 15 19:38 figures
+## drwxr-xr-x  3 work  staff     96 Mar 15 20:08 playground
+## -rw-r--r--  1 work  staff     71 Mar 15 14:36 styles.css
+## total 112
+## drwxr-xr-x  5 work  staff    160 Mar 15 18:21 build
+## -rw-r--r--  1 work  staff  46332 Mar 15 20:08 build-Rmd.Rmd
+## -rw-r--r--@ 1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
+## drwxr-xr-x  9 work  staff    288 Mar 15 19:50 data
+## drwxr-xr-x+ 8 work  staff    256 Mar 15 19:38 figures
+## drwxr-xr-x  3 work  staff     96 Mar 15 20:08 playground
+## -rw-r--r--  1 work  staff     71 Mar 15 14:36 styles.css
+```
+
+- `r` is readable.
+- `w` is writable.
+- `x` is executable.
+
+These options can be used with the `chmod` command shown above. Here is a run down which are available and of what they do.
+
+- `+x` adds execution.
+- `-x` removes execution rights.
+- `+r` adds reading rights.
+- `+w` adds writing rights.
+- `+rwx` adds all of the above.
+- `u+x` change rights for current user; execution.
+- `g+x` change rights for current group; execution.
+- `o+x` change rights for other users; execution.
+- `a+x` change the rights for everyone; execution.
+
+<div class="warning">
+	`chmod a-rwx filename.txt` removes all permissions to all users.
+</div>
+
+
+```bash
+chown Work playground/test_permissions.txt # sets the ownership of file to a user.
+
+groups
+
+chgrp admin playground/test_permissions.txt # sets the ownership of file to a group.
+```
+
+```
+## staff everyone localaccounts _appserverusr admin _appserveradm _lpadmin com.apple.sharepoint.group.2 _appstore _lpoperator _developer _analyticsusers com.apple.access_ftp com.apple.access_screensharing com.apple.access_ssh com.apple.access_remote_ae com.apple.sharepoint.group.1
+```
 
 ## Wildcards
 
@@ -231,6 +451,46 @@ ls -l ./data/*\.csv # this will print all files that are .csv extensions
 ## -rw-r--r--@ 1 work  staff  3975 Feb  5  2014 ./data/iris.csv
 ## -rw-r--r--@ 1 work  staff  1700 Jul 31  2014 ./data/mtcars.csv
 ```
+
+## Zipping and unzipping files
+
+These commands allow you to zip and unzip; compress files. There are two main utilities for zipping and unzipping: `gzip` and `tar`. You will often come across these file types when downloading content.
+
+
+```bash
+touch playground/test_zip.txt
+ls -l playground > playground/test_zip.txt # create a file and add content
+ls -l playground
+
+cat playground/test_zip.txt # show the original file
+gzip playground/test_zip.txt # this will compress the file the original will no longer be available, there is an option to keep both
+cat playground/test_zip.txt.gz # show the file was zipped
+
+gunzip playground/test_zip.txt.gz # will unzip the file back to the original.
+```
+
+For the curious this is what happens when you try to gzip an already compressed file:
+
+
+```bash
+ls -l playground/ > playgound/test_zip.txt 
+
+gzip playground/test_zip.txt
+gzip playground/test_zip.txt.gz
+```
+
+The interest of `tar` vs `gzip` is that it works from a directory, unlike gzip which works from files. This allows us to zip multiple files at once easily. Note that the original file is not deleted with tar.
+
+
+```bash
+ls -l playground
+tar -cf playground/Archive.zip figures/*
+ls -l playground
+
+cat playground/Archive.zip
+```
+
+You can also use tar for compression, but the syntax is backwards. Here with tar we give the options then the file we want to create or the archive.tar as the first argument, and the names of the files to compose the archive as the second.
 
 ## Change directories
 
@@ -360,8 +620,8 @@ ls -l data | grep ".*\.csv"
 ```
 ## data/iris.csv:50
 ## data/mtcars.csv:0
-## -rw-r--r--@ 1 work  staff  3975 Feb  5  2014 iris.csv
-## -rw-r--r--@ 1 work  staff  1700 Jul 31  2014 mtcars.csv
+## -rw-r--r--@ 1 work  staff     3975 Feb  5  2014 iris.csv
+## -rw-r--r--@ 1 work  staff     1700 Jul 31  2014 mtcars.csv
 ```
 
 That command allows us to get all files in a given directory that have the extension `.csv`.
@@ -396,20 +656,20 @@ In BASH you don't necessarily have an output argument. Instead the output, which
 
 ```bash
 ls -la > playground/list-of-files.txt
-cat playground/list-of-files.txt
+cat playground/list-of-files.txt | head
 ```
 
 ```
-## total 96
-## drwxr-xr-x   9 work  staff    288 Mar 14 16:15 .
-## drwxr-xr-x  12 work  staff    384 Mar 14 16:15 ..
-## -rw-r--r--@  1 work  staff   6148 Mar 14 16:13 .DS_Store
+## total 136
+## drwxr-xr-x  12 work  staff    384 Mar 15 20:08 .
+## drwxr-xr-x  13 work  staff    416 Mar 15 19:59 ..
+## -rw-r--r--@  1 work  staff   6148 Mar 15 20:02 .DS_Store
+## -rw-r--r--   1 work  staff     58 Mar 15 19:41 .Rhistory
 ## drwxr-xr-x   4 work  staff    128 Mar 14 15:06 .Rproj.user
-## drwxr-xr-x   4 work  staff    128 Mar 14 16:14 build
-## -rw-r--r--   1 work  staff  32892 Mar 14 16:10 build-md.Rmd
-## -rw-r--r--@  1 work  staff    204 Mar 14 15:44 build-md.Rproj
-## drwxr-xr-x   5 work  staff    160 Mar 14 14:25 data
-## drwxr-xr-x   6 work  staff    192 Mar 14 16:15 playground
+## drwxr-xr-x   5 work  staff    160 Mar 15 18:21 build
+## -rw-r--r--   1 work  staff  46332 Mar 15 20:08 build-Rmd.Rmd
+## -rw-r--r--@  1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
+## drwxr-xr-x   9 work  staff    288 Mar 15 19:50 data
 ```
 
 ## `wc` word/character/line count
@@ -548,7 +808,7 @@ set | head
 ## BASH_VERSINFO=([0]="3" [1]="2" [2]="57" [3]="1" [4]="release" [5]="x86_64-apple-darwin19")
 ## BASH_VERSION='3.2.57(1)-release'
 ## CLICOLOR_FORCE=1
-## CPLEX_STUDIO_DIR1210=/Applications/CPLEX_Studio1210
+## COMMAND_MODE=unix2003
 ```
 
 You can print the value of a variable, even user defined ones, by using the `echo` command and the variable preceded by a dollar sign `$`.
@@ -559,7 +819,7 @@ echo $SHELL
 ```
 
 ```
-## /bin/zsh
+## /usr/local/bin/bash
 ```
 
 ## Anatomy of a BASH script
@@ -600,8 +860,8 @@ ls -l playground | grep "script_0.sh"
 ```
 
 ```
-## -rw-r--r--  1 work  staff     0 Mar 14 16:15 script_0.sh
-## -rwxr--r--  1 work  staff     0 Mar 14 16:15 script_0.sh
+## -rw-r--r--  1 work  staff     0 Mar 15 20:08 script_0.sh
+## -rwxr--r--  1 work  staff     0 Mar 15 20:08 script_0.sh
 ```
 
 You can then run the file using the following syntax in the terminal:
@@ -974,16 +1234,17 @@ for item in playground/*; do ls -l $item; done
 ## list2
 ## list3
 ## total 0
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 copy.txt
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 original.txt
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 playground/copy.txt
-## -rw-r--r--  1 work  staff  3400 Mar 14 16:15 playground/duplicated.csv
-## -rw-r--r--  1 work  staff  509 Mar 14 16:15 playground/list-of-files.txt
-## -rw-r--r--  1 work  staff  0 Mar 14 16:15 playground/original.txt
-## -rwxr--r--  1 work  staff  36 Mar 14 16:15 playground/script_0.sh
-## -rw-r--r--  1 work  staff  18 Mar 14 16:15 playground/script_1.sh
-## -rw-r--r--  1 work  staff  49 Mar 14 16:15 playground/script_2.sh
-## -rw-r--r--  1 work  staff  3975 Mar 14 16:15 playground/std-output-redirection.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 copy.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 original.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 playground/copy.txt
+## -rw-r--r--  1 work  staff  3400 Mar 15 20:08 playground/duplicated.csv
+## -rw-r--r--  1 work  staff  682 Mar 15 20:08 playground/list-of-files.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 playground/original.txt
+## -rwxr--r--  1 work  staff  36 Mar 15 20:08 playground/script_0.sh
+## -rw-r--r--  1 work  staff  18 Mar 15 20:08 playground/script_1.sh
+## -rw-r--r--  1 work  staff  49 Mar 15 20:08 playground/script_2.sh
+## -rw-r--r--  1 work  staff  3975 Mar 15 20:08 playground/std-output-redirection.txt
+## -rwxr--r--  1 work  admin  0 Mar 15 20:08 playground/test_permissions.txt
 ```
 
 Note that a variable is defined and then called.
@@ -1008,6 +1269,7 @@ done
 ## Testing: playground/script_1.sh
 ## Testing: playground/script_2.sh
 ## Testing: playground/std-output-redirection.txt
+## Testing: playground/test_permissions.txt
 ```
 
 To create a numeric range to iterate through you can use something called brace extension. This is done with curly brackets: `{start..stop..increment}` by default this increments by 1 if you do not specify the third argument.
@@ -1048,11 +1310,11 @@ done
 ```
 
 ```
-## total 96
-## drwxr-xr-x   9 work  staff    288 Mar 14 16:15 .
-## drwxr-xr-x  12 work  staff    384 Mar 14 16:15 ..
-## -rw-r--r--@  1 work  staff   6148 Mar 14 16:13 .DS_Store
-## drwxr-xr-x   4 work  staff    128 Mar 14 15:06 .Rproj.user
+## total 136
+## drwxr-xr-x  12 work  staff    384 Mar 15 20:08 .
+## drwxr-xr-x  13 work  staff    416 Mar 15 19:59 ..
+## -rw-r--r--@  1 work  staff   6148 Mar 15 20:02 .DS_Store
+## -rw-r--r--   1 work  staff     58 Mar 15 19:41 .Rhistory
 ## "sepal.length","sepal.width","petal.length","petal.width","variety"
 ## 5.1,3.5,1.4,.2,"Setosa"
 ## 4.9,3,1.4,.2,"Setosa"
@@ -1396,6 +1658,7 @@ The above would run every five minutes every day every hour.
 
 To check that the job is scheduled and running check with `crontab -l`.
 
+
 # Note to MacOS users
 
 After around v3.0 of BASH Mac switched to using `zsh`. This because of licencing issues. If you wish to update your BASH to v4+ then see the following stackoverflow post: [stackoverflow](https://apple.stackexchange.com/questions/193411/update-bash-to-version-4-0-on-osx).
@@ -1423,3 +1686,253 @@ bash --version
 ## This is free software; you are free to change and redistribute it.
 ## There is NO WARRANTY, to the extent permitted by law.
 ```
+
+# Data processing with BASH
+
+In this section we cover a practical approach to simple yet powerful data specific processing skills. We will cover things from downloading data, transforming, cleaning, and even SQL CLI database commands. 
+
+## Downloading data
+
+We will start with using `CURL`. `CURL` stands for Client for URLs. It is a UNIX based CLI tool to transfer data to and from servers; can be used to download from http, https, ftp, sftp.
+
+It is a utility, if you do not have it installed try using the `brew` package manager: `brew install curl`.
+
+The syntax to use curl is: `curl -options URL`.
+
+
+```bash
+curl -o playground/iris_download.csv https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv
+```
+
+- `-O` saves the file with the original name.
+- `-o` saves the file with the argument given.
+
+Note that you can also download multiple files with a wildcard: `https://sitename.com/path/*\.txt`. Or you can use a glob: 
+
+
+```bash
+curl -O https://sitename.com/path/filename[01-20]*\.txt
+```
+
+# Exercise: gene sequence processing pipeline
+
+Let's start by downloading a gene file from rscb.org. Chose a gene any really and download the fasta file.
+
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/4-download-fasta.png">
+    <figcaption>Just download any file.</figcaption>
+</figure>
+
+We will be working with the following files:
+
+
+```bash
+cat data/rcsb_pdb_6CLZ.fasta | head
+```
+
+```
+## >6CLZ_1|Chain A|Matrix metalloproteinase-14|Homo sapiens (9606)
+## PNICDGNFDTVAMLRGEMFVFKERWFWRVRNNQVMDGYPMPIGQFWRGLPASINTAYERKDGKFVFFKGDKHWVFDEASLEPGYPKHIKELGRGLPTDKIDAALFWMPNGKTYFFRGNKYYRFNEELRAVDSEYPKNIKVWEGIPESPRGSFMGSDEVFTYFYKGNKYWKFNNQKLKVEPGYPKSALRDWMGCPSG
+## >6CLZ_2|Chains B,C|Apolipoprotein A-I|Homo sapiens (9606)
+## STFSKLREQLGPVTQEFWDNLEKETEGLRQEMSKDLEEVKAKVQPYLDDFQKKWQEEMELYRQKVEPYLDDFQKKWQEEMELYRQKVEPLRAELQEGARQKLHELQEKLSPLGEEMRDRARAHVDALRTHLAPYSDELRQRLAARLEALKENGGARLAEYHAKATEHLSTLSEKAKPALEDLRQGLLPVLESFKVSFLSALEEYTKKLNTQ
+```
+
+
+```bash
+cat data/rcsb_pdb_6E5B.fasta | head
+```
+
+```
+## >6E5B_1|Chains A,O|Proteasome subunit alpha type-2|Homo sapiens (9606)
+## MAERGYSFSLTTFSPSGKLVQIEYALAAVAGGAPSVGIKAANGVVLATEKKQKSILYDERSVHKVEPITKHIGLVYSGMGPDYRVLVHRARKLAQQYYLVYQEPIPTAQLVQRVASVMQEYTQSGGVRPFGVSLLICGWNEGRPYLFQSDPSGAYFAWKATAMGKNYVNGKTFLEKRYNEDLELEDAIHTAILTLKESFEGQMTEDNIEVGICNEAGFRRLTPTEVKDYLAAIA
+## >6E5B_2|Chains B,P|Proteasome subunit alpha type-4|Homo sapiens (9606)
+## MSRRYDSRTTIFSPEGRLYQVEYAMEAIGHAGTCLGILANDGVLLAAERRNIHKLLDEVFFSEKIYKLNEDMACSVAGITSDANVLTNELRLIAQRYLLQYQEPIPCEQLVTALCDIKQAYTQFGGKRPFGVSLLYIGWDKHYGFQLYQSDPSGNYGGWKATCIGNNSAAAVSMLKQDYKEGEMTLKSALALAIKVLNKTMDVSKLSAEKVEIATLTRENGKTVIRVLKQKEVEQLIKKHEEEEAKAEREKKEKEQKEKDK
+## >6E5B_3|Chains C,Q|Proteasome subunit alpha type-7|Homo sapiens (9606)
+## MSYDRAITVFSPDGHLFQVEYAQEAVKKGSTAVGVRGRDIVVLGVEKKSVAKLQDERTVRKICALDDNVCMAFAGLTADARIVINRARVECQSHRLTVEDPVTVEYITRYIASLKQRYTQSNGRRPFGISALIVGFDFDGTPRLYQTDPSGTYHAWKANAIGRGAKSVREFLEKNYTDEAIETDDLTIKLVIKALLEVVQSGGKNIELAVMRRDQSLKILNPEEIEKYVAEIEKEKEENEKKKQKKAS
+## >6E5B_4|Chains D,R|Proteasome subunit alpha type-5|Homo sapiens (9606)
+## MFLTRSEYDRGVNTFSPEGRLFQVEYAIEAIKLGSTAIGIQTSEGVCLAVEKRITSPLMEPSSIEKIVEIDAHIGCAMSGLIADAKTLIDKARVETQNHWFTYNETMTVESVTQAVSNLALQFGEEDADPGAMSRPFGVALLFGGVDEKGPQLFHMDPSGTFVQCDARAIGSASEGAQSSLQEVYHKSMTLKEAIKSSLIILKQVMEEKLNATNIELATVQPGQNFHMFTKEELEEVIKDI
+## >6E5B_5|Chains E,S|Proteasome subunit alpha type-1|Homo sapiens (9606)
+## MFRNQYDNDVTVWSPQGRIHQIEYAMEAVKQGSATVGLKSKTHAVLVALKRAQSELAAHQKKILHVDNHIGISIAGLTADARLLCNFMRQECLDSRFVFDRPLPVSRLVSLIGSKTQIPTQRYGRRPYGVGLLIAGYDDMGPHIFQTCPSANYFDCRAMSIGARSQSARTYLERHMSEFMECNLNELVKHGLRALRETLPAEQDLTTKNVSIGIVGKDLEFTIYDDDDVSPFLEGLEERPQRKAQPAQPADEPAEKADEPMEH
+```
+
+
+```bash
+cat data/SC.gtf | head
+```
+
+```
+## #!genome-build R64-1-1
+## #!genome-version R64-1-1
+## #!genome-date 2011-09
+## #!genome-build-accession GCA_000146045.2
+## #!genebuild-last-updated 2011-12
+## IV	SGD	gene	1802	2953	.	+	.	gene_id "YDL248W"; gene_name "COS7"; gene_source "SGD"; gene_biotype "protein_coding";
+## IV	SGD	transcript	1802	2953	.	+	.	gene_id "YDL248W"; transcript_id "YDL248W"; gene_name "COS7"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "COS7"; transcript_source "SGD"; transcript_biotype "protein_coding";
+## IV	SGD	exon	1802	2953	.	+	.	gene_id "YDL248W"; transcript_id "YDL248W"; exon_number "1"; gene_name "COS7"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "COS7"; transcript_source "SGD"; transcript_biotype "protein_coding"; exon_id "YDL248W.1";
+## IV	SGD	CDS	1802	2950	.	+	0	gene_id "YDL248W"; transcript_id "YDL248W"; exon_number "1"; gene_name "COS7"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "COS7"; transcript_source "SGD"; transcript_biotype "protein_coding"; protein_id "YDL248W";
+## IV	SGD	start_codon	1802	1804	.	+	0	gene_id "YDL248W"; transcript_id "YDL248W"; exon_number "1"; gene_name "COS7"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "COS7"; transcript_source "SGD"; transcript_biotype "protein_coding";
+```
+
+## Refresher: commands and regex
+
+Here are some commands we will be working with:
+
+- `cat file1 file2` prints the contents of the file(s).
+- `head -5 file` prints the first n (eg 5) lines of a file.
+- `tail -5 file` print the last n (eg 5) lines of a file.
+- `tail -n +5 file` skip the 5 first lines of a file and prints the rest.
+- `wc -l file` print the number of lines in a file.
+- `wc -c file` print the number of characters in a file.
+- `zcat or gzcat file.gz` prints the content of zipped files.
+- `less file` browse a file page by page.
+
+Here is some review on regular expressions:
+
+This is the syntax for using this grep command:
+ 
+```... | grep options pattern | ...```
+ 
+- Important options
+	- `-P` Allows Perl style and special characters
+	- `-v` Negative grep, exludes lines with the pattern given
+ 
+- Some patterns
+	- `text` Lines containing "text".
+	- `^text` Lines starting with "text".
+	- `text$` Lines finishing by "text".
+	- `text.abc` Lines containing "text" other characters, then "abc".
+	- `[axz]` Lines containing characters, a, x, or z.
+	- `[a-z]` Lines containing lower case characters.
+	- `[^0-9]` Lines not containing numerical characters.
+
+## Processing through UNIX pipeline
+
+This means we can chain commands together with a pipe character `|`. In this example we take our file and reformat it, then pipe its output to a new file called: "newfile.txt.gz", as we a re compressing it with `gzip`.
+
+
+```bash
+cat data/rcsb_pdb_6E5B.fasta | tail -n +1 | cut -c4- | sort -k1 | uniq | awk '{print $1 "\t" $4}' | head
+
+cat data/rcsb_pdb_6E5B.fasta | tail -n +1 | cut -c4- | sort -k1 | uniq | awk '{print $1 "\t" $4}' | gzip > playground/newfile.txt.gz
+```
+
+```
+## 5B_10|Chains	beta
+## 5B_11|Chains	beta
+## 5B_12|Chains	beta
+## 5B_13|Chains	beta
+## 5B_14|Chains	beta
+## 5B_1|Chains	alpha
+## 5B_2|Chains	alpha
+## 5B_3|Chains	alpha
+## 5B_4|Chains	alpha
+## 5B_5|Chains	alpha
+```
+
+Here is part of our file printed out, we wanted just the transcripts. To print just these we used a regular expression with the command `grep`.
+
+Here is a command plus some review on regex:
+
+
+```bash
+cat data/SC.gtf | grep -e "SGD\ttranscript" | head -5
+```
+
+```
+## IV	SGD	transcript	1802	2953	.	+	.	gene_id "YDL248W"; transcript_id "YDL248W"; gene_name "COS7"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "COS7"; transcript_source "SGD"; transcript_biotype "protein_coding";
+## IV	SGD	transcript	3762	3836	.	+	.	gene_id "YDL247W-A"; transcript_id "YDL247W-A"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_source "SGD"; transcript_biotype "protein_coding";
+## IV	SGD	transcript	5985	7814	.	+	.	gene_id "YDL247W"; transcript_id "YDL247W"; gene_name "MPH2"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "MPH2"; transcript_source "SGD"; transcript_biotype "protein_coding";
+## IV	SGD	transcript	8683	9756	.	-	.	gene_id "YDL246C"; transcript_id "YDL246C"; gene_name "SOR2"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "SOR2"; transcript_source "SGD"; transcript_biotype "protein_coding";
+## IV	SGD	transcript	11657	13360	.	-	.	gene_id "YDL245C"; transcript_id "YDL245C"; gene_name "HXT15"; gene_source "SGD"; gene_biotype "protein_coding"; transcript_name "HXT15"; transcript_source "SGD"; transcript_biotype "protein_coding";
+```
+
+
+<div class="note">
+	Note that when ^ is used inside the [] brackets it means excludes whatever is inside.
+</div>
+
+Let's try another command and try to get back just select columns from our file.
+
+
+```bash
+cat data/SC.gtf | grep -e "transcript\t" | cut -f 1,4,5,6,10 | head
+```
+
+```
+## IV	1802	2953	.
+## IV	3762	3836	.
+## IV	5985	7814	.
+## IV	8683	9756	.
+## IV	11657	13360	.
+## IV	16204	17226	.
+## IV	17577	18566	.
+## IV	18959	19312	.
+## IV	20635	21006	.
+## IV	22471	22608	.
+```
+
+Now we'll start trying to change the format of our file just to practice our commands. We will invert the order of two of the columns and add an empty column as well:
+
+
+```bash
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | head
+```
+
+```
+## IV	1802	2953	"YDL248W";	0	+
+## IV	3762	3836	"YDL247W-A";	0	+
+## IV	5985	7814	"YDL247W";	0	+
+## IV	8683	9756	"YDL246C";	0	-
+## IV	11657	13360	"YDL245C";	0	-
+## IV	16204	17226	"YDL244W";	0	+
+## IV	17577	18566	"YDL243C";	0	-
+## IV	18959	19312	"YDL242W";	0	+
+## IV	20635	21006	"YDL241W";	0	+
+## IV	22471	22608	"YDL240C-A";	0	-
+```
+
+Now let's try and replace an element with another. We'll use the `sed` command. We'll try to substitute both semi-colon and quotes with nothing.
+
+So we're using the sed command coupled with the regular expression: `s/[;\*]//g` between simple quotes `''`. The g is for global at the end, if not included then it would only work on the first instance.
+
+Compare the results to the above print:
+
+
+```bash
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | sed 's/[;\*]//g' | sed 's/["\*]//g' | head
+```
+
+```
+## IV	1802	2953	YDL248W	0	+
+## IV	3762	3836	YDL247W-A	0	+
+## IV	5985	7814	YDL247W	0	+
+## IV	8683	9756	YDL246C	0	-
+## IV	11657	13360	YDL245C	0	-
+## IV	16204	17226	YDL244W	0	+
+## IV	17577	18566	YDL243C	0	-
+## IV	18959	19312	YDL242W	0	+
+## IV	20635	21006	YDL241W	0	+
+## IV	22471	22608	YDL240C-A	0	-
+```
+
+
+Finally let's sort our outputs. Sorted the data by the numerical order of the second column. Command was sort `-k 2`. To sort by multiple criteria, we just repeat the `-k` option for sort and give it another argument.
+
+
+```bash
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | sed 's/[;\*]//g' | sed 's/["\*]//g' | sort -k 2  | head
+```
+
+```
+## XV	1000	1338	YOL166C	0	-
+## IV	1000104	1002023	YDR266C	0	-
+## XII	1000342	1001703	YLR431C	0	-
+## VII	1000927	1002240	YGR254W	0	+
+## XV	1001147	1003225	YOR354C	0	-
+## V	100133	100204	tM(CAU)E	0	+
+## I	100225	101145	YAL025C	0	-
+## IV	1002510	1003502	YDR267C	0	-
+## VI	100252	100605	YFL019C	0	-
+## VII	1002523	1003962	YGR255C	0	-
+```
+

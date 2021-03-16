@@ -1,1 +1,1 @@
-cut -f 2 -d , data/iris.csv | head -n 5
+ps -u `whoami` | head

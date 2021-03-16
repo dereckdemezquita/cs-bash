@@ -1,1 +1,5 @@
-15 2 * * * bash script.sh
+if [ boolean_condition ]; then # spaces!!! [ logical ];
+    # CODE
+else
+    # OTHER CODE
+fi # finishes an if statement

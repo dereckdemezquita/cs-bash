@@ -1,1 +1,3 @@
-tail -n 20 data/iris.csv | head -n 3
+kill -9 PID # kills programme with given PID
+
+# Flag: -9 KILL (non-catchable, non-ignorable kill)

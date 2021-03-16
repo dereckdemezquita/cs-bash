@@ -1,2 +1,5 @@
-grep -c "Virginica" data/iris.csv data/mtcars.csv # -c prints number of matches
-ls -l data | grep ".*\.csv"
+chown Work playground/test_permissions.txt # sets the ownership of file to a user.
+
+groups
+
+chgrp admin playground/test_permissions.txt # sets the ownership of file to a group.

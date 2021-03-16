@@ -1,22 +1,3 @@
-# complicated if statement
-if grep -q "House Cat" $1; then
-    mv $1 mammal/
-fi
-if grep -q "Crocodile" $1; then
-    mv $1 reptile/
-fi
-if grep -q "Bald Eagle" $1; then
-    mv $1 bird/
-fi
+for item in list1 list2 list3; do echo $item; done
 
-# case statement
-case `cat $1` in
-    "House Cat")
-    mv $1 mammal/;;
-    "Crocodile")
-    mv $1 reptile/;;
-    "Bald Eagle")
-    mv $1 bird/;;
-    *)
-    mv $1 other/;;
-esac
+for item in playground/*; do ls -l $item; done

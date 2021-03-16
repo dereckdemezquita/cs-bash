@@ -1,7 +1,2 @@
-#!/bin/bash
-
-# your code goes here
-for item in item1 item2 item3
-do
-    echo "Print: $item"
-done
+grep -c "Virginica" data/iris.csv data/mtcars.csv # -c prints number of matches
+ls -l data | grep ".*\.csv"

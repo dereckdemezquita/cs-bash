@@ -1,6 +1,1 @@
-touch playground/script_0.sh
-ls -l playground | grep "script_0.sh"
-
-chmod u+x playground/script_0.sh
-
-ls -l playground | grep "script_0.sh"
+echo "The duck went to the market." | sed "s/duck/fox/g"

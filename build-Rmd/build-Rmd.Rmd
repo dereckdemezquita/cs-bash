@@ -1,5 +1,5 @@
 ---
-title: "BASH scripting"
+title: ""
 author: "Dereck de Mézquita"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 knit: (function(inputFile, encoding) { 
@@ -7,7 +7,8 @@ knit: (function(inputFile, encoding) {
                         encoding=encoding, 
                         output_file=file.path(dirname(inputFile), "./build/", "/cs-bash.html")) })
 output:
-  html_document: 
+  html_document:
+    css: "styles.css"
     fig_caption: yes
     keep_md: yes
     number_sections: yes
@@ -39,7 +40,7 @@ knitr::opts_hooks$set(engine = function(options) {
 
 # cs-bash
 
-A primer on BASH scripting and Linux systems, will make it into a course for: [derecksnotes.com](www.derecksnotes.com)
+A primer on BASH scripting and Linux systems, now a course on: [derecksnotes.com](https://www.derecksnotes.com/courses/displayEntry.php?entry=intro-unix-shell)
 
 ## About this course 
 
@@ -62,7 +63,35 @@ head data/mtcars.csv
 
 *Note you might often see the use of a pipe and head. This is to reduce the output's size.*
 
+You can download the data for this course by searching in the data directory of the associated github repo: [dereckdemezquita/cs-bash](https://github.com/dereckdemezquita/cs-bash).
+
 # Bash quick start; basic commands
+
+BASH is a 0 indexed language. This means that arrays start counting from 0. Thus, the first item in a list is 0, then 1, then `n - 1` for the ending item.
+
+*Note you can use the tab key to autocomplete file and directory names.*
+
+The filesystem manages files and directories in the computer system. These are defined by absoulute paths to the system's root. The root being the lowest level directory holding all other system files designated by `/`.
+
+A file and directory can be defined as such: 
+
+- `/home/usr/username/Documents/`
+- `/home/usr/username/Documents/somefile.txt`
+
+- Never use spaces in file names; use underscores `_`.
+- `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
+
+Quotes are understood a little different depending on which kind are used: double `""` or single `''`. 
+
+- `'sometext'` single quotes means the SHELL understands this literally.
+- `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
+
+Backticks create a SHELL within a SHELL. This syntax can be very powerful and useful.
+
+- \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
+    - A newer syntax for this same method is `$(some_command)`.
+    
+<br>
 
 - BASH is indexed at 0.
 - `#!/bin/bash` A "shebang" should be included in each script file to point to the interpreter.
@@ -97,7 +126,18 @@ head data/mtcars.csv
 	- `*`
 	- `/`
 
-```{bash eval=FALSE}
+
+```{bash}
+w # shows list of connected users.
+whoami # shows the name of the current user.
+uname -a # shows kernal information (Linux, Darwin for OSX).
+date # shows current date and time.
+
+# ctrl + c abort execution.
+# ctrl + z pause execution.
+```
+
+```{bash, eval=FALSE}
 history # prints a list of recent commands
     !2 # re-runs command n2 from the history
 chmod # modify permissions on a file/directory
@@ -162,47 +202,163 @@ Note the following for help:
 
 # Introduction to BASH scripting
 
+A UNIX shell is a command line interface/interpreter or shell that allows one to use a command line to manipulate UNIX-like operating systems. It is a both an interactive command language and a scripting language. You can both use it as a console, and write and save scripts to be run later.
+
 Before computers had GUIs they had command-line interfaces. The shell is an interface through which we can run other programmes and points their output to a human readable form; it then prompts for the next command. 
 
-What is BASH and why use it? BASH stands for "Bourne Again Shell". It is a shell that was developed in the 80's. It is often the default for many Unix systems such as Linux and MacOS systems; MacOS has recently switched to zsh - a variant of BASH.
+What is BASH and why use it? BASH stands for "Bourne Again Shell". It is a shell that was developed in the 80's. BASH is used by the operating system to control the execution of shell scripts. Operating systems like, OSX and Linux are based on UNIX. The operating system manages memory and computing power (CPU, GPU), devices (screen, keyboard), and manages users. Operating systems allows us to run computer programmes and the graphical user interface (GUI).
 
-**Note that in MacOS's `zsh` implementation `zsh` is 1 indexed.**
+<div class="warning">
+	MacOS has recently switched to zsh - a variant of BASH. - Note that in MacOS's `zsh` implementation `zsh` is 1 indexed.
+</div>
 
-BASH can be used to run programmes and data pipelines or automate repetitive tasks. All major cloud computing systems have a CLI to their products: AWS, Google Cloud, Microsoft Azure.
+<div class="note">
+    We will learn: directory structure, shell (command lin interface), philosphy (multiuser/multitasking), flexibility; everything is a file.
+</div>
 
-Learning and being capable of using SHELL scripting and BASH is an essential skill.
+BASH can be used to run programmes and data pipelines or automate repetitive tasks. All major cloud computing systems have a CLI to their products: AWS, Google Cloud, Microsoft Azure. Learning and being capable of using SHELL scripting and BASH is an essential skill.
 
-BASH scripting is the process whereby a programming writes a BASH script in a file and saves it. This file can then be executed and even repeatedly used for convience. 
+BASH scripting is the process whereby a programmer writes a BASH script in a file and saves it. This file can then be executed and even repeatedly used for convenience. 
 
-## Basic tips
+## History
 
-BASH is a 0 indexed language. This means that arrays start counting from 0. Thus, the first item in a list is 0, then 1, then `n - 1` for the ending item.
+The origins of UNIX start with multics created at MIT in the 60s, this was then licenced by AT&T in the 70s. The GNU project in the 80s developed the project. Finally Linux was created by Linus Torvalds in the 90s.
 
-*Note you can use the tab key to autocomplete file and directory names.*
+The Linux operating system has by far gone on to become the most succesful and widely used operating system in the world. Today it runs on anything from personal machines, industrial machines, and a majority of internet servers.
 
-The filesystem manages files and directories in the computer system. These are defined by absoulute paths to the system's root. The root being the lowest level directory holding all other system files designated by `/`.
+## Architecture of UNIX
 
-A file and directory can be defined as such: 
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/1-os-structure.jpg">
+    <figcaption>A representation of an OS's structure.</figcaption>
+</figure>
 
-- `/home/usr/username/Documents/`
-- `/home/usr/username/Documents/somefile.txt`
+Computer programmes, including GUI ones, access the computer's hardware through the kernal and system calls.
 
-- Never use spaces in file names; use underscores `_`.
-- `history` prints a list of recent commands; then use `!n` to re-use a specific command by index.
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/2-file-structure.jpg">
+    <figcaption>A representation of an OS's file tree.</figcaption>
+</figure>
 
-Quotes are understood a little different depending on which kind are used: double `""` or single `''`. 
+The computer's storage is the separated into various parts and compartments, some accessible to a basic user and some not. The `/bin`, `/dev`, `/etc`, are mostly files used by the system and the programmes installed on the machine. `/usr` contains common user system files for programmes installed on the machine; this reduces redundancies and saves storage. Finally the `/home` directory contains the different user's files; on MacOS machines.
 
-- `'sometext'` single quotes means the SHELL understands this literally.
-- `"sometext"` double quotes means the SHELL understands this literally expcept when it sees a `$` or backticks \`\`.
-
-Backticks create a SHELL within a SHELL. This syntax can be very powerful and useful.
-
-- \`some_command\` the SHELL runs the command inside and captures the STDOUT (output) back into the above SHELL as a variable.
-    - A newer syntax for this same method is `$(some_command)`.
+There is only one root in UNIX. Called by the `/`. Every path starts from the root.
 
 ## Absolute vs relative paths
 
 There are two main kinds of paths in the filesystem. Absolute and relative. These are defined by the first character of the path; paths begining with `/` are absolute. These paths can be from anywhere in the file system and will always use as a starting point the root directory of the computer. A relative path may be defined by either `./` or a directory name at the begining of the path. These will only work when inside the directory above the rest of the path.
+
+## The SHELL
+
+In essence the shell is a programme like any other, but this particular programme allows us access to the machine's hardware through commands and scripts.
+
+<div class="note">
+    You can launch the terminal in mac by searching your machine for an application named "Terminal". It is often found in the applications directory in the folder Utilities.
+</div>
+
+It is an interface where we can give commands, a command line type of interface. The command line interface interprets what the user types. A command can be: a built-in shell command (`ls`, `pwd`, `mkdir`, etc...), an executable script, or even a compiled programme.
+
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/3-mac-terminal.png">
+    <figcaption>The typical Mac terminal.</figcaption>
+</figure>
+
+As stated before there are different implementations of the shell; `sh`, `BASH`, `csh`, `tsh`, `zsh`...
+
+<div class="warning">
+    The Mac terminal uses the `zsh` implimentation, as seen in the terminal's name up top in the info bar.
+</div>
+
+
+## Logging in and out
+
+You might find yourself using `BASH` or other on a local machine as well as remotely. Logging and logging out might be required follow these steps to do so:
+
+```{bash, eval=FALSE}
+login # logs in locally
+
+ssh user@server # ssh command for server use
+logout # logs you out of your session
+```
+
+## Running and managing running commands
+
+Here are some basic commands that are often used. These get you some information about the system you're currently logged into.
+
+- `w` shows list of connected users.
+- `whoami` shows the name of the current user.
+- `uname -a` shows kernal information (Linux, Darwin for OSX).
+- `date` shows current date and time.
+
+<div class="note">
+	To quit a command or abort execution you can used: `ctrl + c`.
+</div>
+
+<div class="note">
+	To pause execution of a command you can use: `ctrl + z`.
+</div>
+
+To go back to the programme type, `fg`, to let the programme resume in the background type `bg`. This allows it to push the execution to the background and let you use the shell for other things meanwhile.
+
+So to restate: pause then send to background, or type the command and leave a space and type `-&` this will directly send the execution to the background. Look to the command below to view all commands currently running:
+
+```{bash}
+ps -u "Dereck" | head # this command shows all programmes currently running for a given user
+```
+
+
+If you want to distinguish the programmes running on your user then do `ps -u $(whoami)`; more modern syntax shown below. This will show the ID "PID" of the programme and the time also with the command. As seen above a quick example of what was currently running on my machine.
+
+```{bash}
+ps -u `whoami` | head
+```
+
+To kill the execution of a specific command use the above to find the "PID" then use it as follows.
+
+```{bash, eval=FALSE}
+kill -9 PID # kills programme with given PID
+
+# Flag: -9 KILL (non-catchable, non-ignorable kill)
+```
+
+## File permissions
+
+On a LINUX system permissions are granted to specific users. Here is a quick summary of the different possibilities. This is seen when we do `ls -l` this will give the permissions and details. They are separated into three groups.
+
+```{bash}
+touch playground/test_permissions.txt
+ls -l | head
+chmod u+x playground/test_permissions.txt
+ls -l | head
+```
+
+- `r` is readable.
+- `w` is writable.
+- `x` is executable.
+
+These options can be used with the `chmod` command shown above. Here is a run down which are available and of what they do.
+
+- `+x` adds execution.
+- `-x` removes execution rights.
+- `+r` adds reading rights.
+- `+w` adds writing rights.
+- `+rwx` adds all of the above.
+- `u+x` change rights for current user; execution.
+- `g+x` change rights for current group; execution.
+- `o+x` change rights for other users; execution.
+- `a+x` change the rights for everyone; execution.
+
+<div class="warning">
+	`chmod a-rwx filename.txt` removes all permissions to all users.
+</div>
+
+```{bash}
+chown Work playground/test_permissions.txt # sets the ownership of file to a user.
+
+groups
+
+chgrp admin playground/test_permissions.txt # sets the ownership of file to a group.
+```
 
 ## Wildcards
 
@@ -211,6 +367,43 @@ Wildcards allow you to match all files in a directory by use of `*`; you can als
 ```{bash}
 ls -l ./data/*\.csv # this will print all files that are .csv extensions
 ```
+
+## Zipping and unzipping files
+
+These commands allow you to zip and unzip; compress files. There are two main utilities for zipping and unzipping: `gzip` and `tar`. You will often come across these file types when downloading content.
+
+```{bash, eval=FALSE}
+touch playground/test_zip.txt
+ls -l playground > playground/test_zip.txt # create a file and add content
+ls -l playground
+
+cat playground/test_zip.txt # show the original file
+gzip playground/test_zip.txt # this will compress the file the original will no longer be available, there is an option to keep both
+cat playground/test_zip.txt.gz # show the file was zipped
+
+gunzip playground/test_zip.txt.gz # will unzip the file back to the original.
+```
+
+For the curious this is what happens when you try to gzip an already compressed file:
+
+```{bash, eval=FALSE}
+ls -l playground/ > playgound/test_zip.txt 
+
+gzip playground/test_zip.txt
+gzip playground/test_zip.txt.gz
+```
+
+The interest of `tar` vs `gzip` is that it works from a directory, unlike gzip which works from files. This allows us to zip multiple files at once easily. Note that the original file is not deleted with tar.
+
+```{bash, eval=FALSE}
+ls -l playground
+tar -cf playground/Archive.zip figures/*
+ls -l playground
+
+cat playground/Archive.zip
+```
+
+You can also use tar for compression, but the syntax is backwards. Here with tar we give the options then the file we want to create or the archive.tar as the first argument, and the names of the files to compose the archive as the second.
 
 ## Change directories
 
@@ -327,7 +520,7 @@ In BASH you don't necessarily have an output argument. Instead the output, which
 
 ```{bash}
 ls -la > playground/list-of-files.txt
-cat playground/list-of-files.txt
+cat playground/list-of-files.txt | head
 ```
 
 ## `wc` word/character/line count
@@ -998,6 +1191,7 @@ The above would run every five minutes every day every hour.
 
 To check that the job is scheduled and running check with `crontab -l`.
 
+
 # Note to MacOS users
 
 After around v3.0 of BASH Mac switched to using `zsh`. This because of licencing issues. If you wish to update your BASH to v4+ then see the following stackoverflow post: [stackoverflow](https://apple.stackexchange.com/questions/193411/update-bash-to-version-4-0-on-osx).
@@ -1015,3 +1209,136 @@ Change BASH version inside R-Studio chunks explained:
 ```{bash, engine.opts='-l'}
 bash --version
 ```
+
+# Data processing with BASH
+
+In this section we cover a practical approach to simple yet powerful data specific processing skills. We will cover things from downloading data, transforming, cleaning, and even SQL CLI database commands. 
+
+## Downloading data
+
+We will start with using `CURL`. `CURL` stands for Client for URLs. It is a UNIX based CLI tool to transfer data to and from servers; can be used to download from http, https, ftp, sftp.
+
+It is a utility, if you do not have it installed try using the `brew` package manager: `brew install curl`.
+
+The syntax to use curl is: `curl -options URL`.
+
+```{bash, eval=FALSE}
+curl -o playground/iris_download.csv https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv
+```
+
+- `-O` saves the file with the original name.
+- `-o` saves the file with the argument given.
+
+Note that you can also download multiple files with a wildcard: `https://sitename.com/path/*\.txt`. Or you can use a glob: 
+
+```{bash, eval=FALSE}
+curl -O https://sitename.com/path/filename[01-20]*\.txt
+```
+
+# Exercise: gene sequence processing pipeline
+
+Let's start by downloading a gene file from rscb.org. Chose a gene any really and download the fasta file.
+
+<figure>
+    <img class="lazy" data="/courses/entries/documents/intro-unix-shells/4-download-fasta.png">
+    <figcaption>Just download any file.</figcaption>
+</figure>
+
+We will be working with the following files:
+
+```{bash}
+cat data/rcsb_pdb_6CLZ.fasta | head
+```
+
+```{bash}
+cat data/rcsb_pdb_6E5B.fasta | head
+```
+
+```{bash, error=TRUE}
+cat data/SC.gtf | head
+```
+
+## Refresher: commands and regex
+
+Here are some commands we will be working with:
+
+- `cat file1 file2` prints the contents of the file(s).
+- `head -5 file` prints the first n (eg 5) lines of a file.
+- `tail -5 file` print the last n (eg 5) lines of a file.
+- `tail -n +5 file` skip the 5 first lines of a file and prints the rest.
+- `wc -l file` print the number of lines in a file.
+- `wc -c file` print the number of characters in a file.
+- `zcat or gzcat file.gz` prints the content of zipped files.
+- `less file` browse a file page by page.
+
+Here is some review on regular expressions:
+
+This is the syntax for using this grep command:
+ 
+```... | grep options pattern | ...```
+ 
+- Important options
+	- `-P` Allows Perl style and special characters
+	- `-v` Negative grep, exludes lines with the pattern given
+ 
+- Some patterns
+	- `text` Lines containing "text".
+	- `^text` Lines starting with "text".
+	- `text$` Lines finishing by "text".
+	- `text.abc` Lines containing "text" other characters, then "abc".
+	- `[axz]` Lines containing characters, a, x, or z.
+	- `[a-z]` Lines containing lower case characters.
+	- `[^0-9]` Lines not containing numerical characters.
+
+## Processing through UNIX pipeline
+
+This means we can chain commands together with a pipe character `|`. In this example we take our file and reformat it, then pipe its output to a new file called: "newfile.txt.gz", as we a re compressing it with `gzip`.
+
+```{bash}
+cat data/rcsb_pdb_6E5B.fasta | tail -n +1 | cut -c4- | sort -k1 | uniq | awk '{print $1 "\t" $4}' | head
+
+cat data/rcsb_pdb_6E5B.fasta | tail -n +1 | cut -c4- | sort -k1 | uniq | awk '{print $1 "\t" $4}' | gzip > playground/newfile.txt.gz
+```
+
+Here is part of our file printed out, we wanted just the transcripts. To print just these we used a regular expression with the command `grep`.
+
+Here is a command plus some review on regex:
+
+```{bash}
+cat data/SC.gtf | grep -e "SGD\ttranscript" | head -5
+```
+
+
+<div class="note">
+	Note that when ^ is used inside the [] brackets it means excludes whatever is inside.
+</div>
+
+Let's try another command and try to get back just select columns from our file.
+
+```{bash}
+cat data/SC.gtf | grep -e "transcript\t" | cut -f 1,4,5,6,10 | head
+```
+
+Now we'll start trying to change the format of our file just to practice our commands. We will invert the order of two of the columns and add an empty column as well:
+
+```{bash, error=TRUE}
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | head
+```
+
+Now let's try and replace an element with another. We'll use the `sed` command. We'll try to substitute both semi-colon and quotes with nothing.
+
+So we're using the sed command coupled with the regular expression: `s/[;\*]//g` between simple quotes `''`. The g is for global at the end, if not included then it would only work on the first instance.
+
+Compare the results to the above print:
+
+```{bash, error=TRUE}
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | sed 's/[;\*]//g' | sed 's/["\*]//g' | head
+```
+
+
+Finally let's sort our outputs. Sorted the data by the numerical order of the second column. Command was sort `-k 2`. To sort by multiple criteria, we just repeat the `-k` option for sort and give it another argument.
+
+```{bash, error=TRUE}
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | sed 's/[;\*]//g' | sed 's/["\*]//g' | sort -k 2  | head
+```
+

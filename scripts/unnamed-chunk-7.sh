@@ -1,1 +1,1 @@
-cut -f -1-2,5 -d , data/iris.csv | head -n 5 # head used to reduce print size
+ps -u "Dereck" | head # this command shows all programmes currently running for a given user

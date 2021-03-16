@@ -1,10 +1,13 @@
-total 96
-drwxr-xr-x   9 work  staff    288 Mar 14 16:15 .
-drwxr-xr-x  12 work  staff    384 Mar 14 16:15 ..
--rw-r--r--@  1 work  staff   6148 Mar 14 16:13 .DS_Store
+total 136
+drwxr-xr-x  12 work  staff    384 Mar 15 20:37 .
+drwxr-xr-x  12 work  staff    384 Mar 15 20:13 ..
+-rw-r--r--@  1 work  staff   6148 Mar 15 20:02 .DS_Store
+-rw-r--r--   1 work  staff     58 Mar 15 19:41 .Rhistory
 drwxr-xr-x   4 work  staff    128 Mar 14 15:06 .Rproj.user
-drwxr-xr-x   4 work  staff    128 Mar 14 16:14 build
--rw-r--r--   1 work  staff  32892 Mar 14 16:10 build-md.Rmd
--rw-r--r--@  1 work  staff    204 Mar 14 15:44 build-md.Rproj
-drwxr-xr-x   5 work  staff    160 Mar 14 14:25 data
-drwxr-xr-x   6 work  staff    192 Mar 14 16:15 playground
+drwxr-xr-x   8 work  staff    256 Mar 15 20:37 build
+-rw-r--r--   1 work  staff  46645 Mar 15 20:37 build-Rmd.Rmd
+-rw-r--r--@  1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
+drwxr-xr-x   9 work  staff    288 Mar 15 19:50 data
+drwxr-xr-x+  8 work  staff    256 Mar 15 19:38 figures
+drwxr-xr-x   7 work  staff    224 Mar 15 20:37 playground
+-rw-r--r--   1 work  staff     48 Mar 15 20:37 styles.css

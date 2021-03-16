@@ -1,3 +1,1 @@
-bash playground/script_2.sh 28 John
-
-bash playground/script_2.sh John 28
+cut -d , -f 1 playground/duplicated.csv | uniq | head -n 10

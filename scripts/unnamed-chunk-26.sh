@@ -1,4 +1,1 @@
-echo '{
-    echo "Username: $1";
-    echo "Age: $2";
-}' > playground/script_2.sh
+cut -d , -f 1 playground/duplicated.csv | uniq | head -n 10

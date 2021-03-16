@@ -1,3 +1,5 @@
-awk 'NF' data/mtcars.csv data/mtcars.csv | sort | head -n 5
+ls -l playground
+tar -cf playground/Archive.zip figures/*
+ls -l playground
 
-awk 'NF' data/mtcars.csv data/mtcars.csv > playground/duplicated.csv
+cat playground/Archive.zip

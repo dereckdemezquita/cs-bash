@@ -1,9 +1,11 @@
-func_name () {
-    # code goes here
-    return # something
-}
+# brace extensions
+for x in {1..10..3}
+do
+    echo $x
+done
 
-function func_name () { # parenthesis optional here
-    # code goes here
-    return # something
-}
+# three expression
+for ((x=2;x<=10;x+=3))
+do
+    echo $x
+done

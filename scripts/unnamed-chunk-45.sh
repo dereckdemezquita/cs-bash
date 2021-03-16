@@ -1,11 +1,7 @@
-# brace extensions
-for x in {1..10..3}
-do
-    echo $x
-done
+declare -a my_array
+my_array=(1 2 3)
 
-# three expression
-for ((x=2;x<=10;x+=3))
-do
-    echo $x
-done
+echo ${my_array[2]} # prints 3
+
+my_array[1]=10
+echo ${my_array[@]}
