@@ -128,15 +128,15 @@ date # shows current date and time.
 ```
 
 ```
-## 20:01  up 17 mins, 4 users, load averages: 2.07 2.62 3.07
+## 20:08  up 24 mins, 4 users, load averages: 2.01 2.12 2.61
 ## USER     TTY      FROM              LOGIN@  IDLE WHAT
-## work     console  -                19:44      16 -
-## work     s000     -                19:45      14 ping google.com
-## work     s005     -                19:45      15 -bash
-## work     s006     -                19:45      15 -bash
+## work     console  -                19:44      23 -
+## work     s000     -                19:45      22 ping google.com
+## work     s005     -                19:45      23 -bash
+## work     s006     -                19:45      23 -bash
 ## work
 ## Darwin derecks-MBP-2.attlocal.net 19.6.0 Darwin Kernel Version 19.6.0: Thu Oct 29 22:56:45 PDT 2020; root:xnu-6153.141.2.2~1/RELEASE_X86_64 x86_64
-## Mon Mar 15 20:01:03 PDT 2021
+## Mon Mar 15 20:08:24 PDT 2021
 ```
 
 
@@ -232,14 +232,14 @@ The Linux operating system has by far gone on to become the most succesful and w
 ## Architecture of UNIX
 
 <figure>
-    <img align="center" src="./build-Rmd/figures/1-os-structure.jpg">
+    <img align="center" src="build-Rmd/figures/1-os-structure.jpg">
     <figcaption>A representation of an OS's structure.</figcaption>
 </figure>
 
 Computer programmes, including GUI ones, access the computer's hardware through the kernal and system calls.
 
 <figure>
-    <img align="center" src="./build-Rmd/figures/2-file-structure.jpg">
+    <img align="center" src="build-Rmd/figures/2-file-structure.jpg">
     <figcaption>A representation of an OS's file tree.</figcaption>
 </figure>
 
@@ -262,7 +262,7 @@ In essence the shell is a programme like any other, but this particular programm
 It is an interface where we can give commands, a command line type of interface. The command line interface interprets what the user types. A command can be: a built-in shell command (`ls`, `pwd`, `mkdir`, etc...), an executable script, or even a compiled programme.
 
 <figure>
-    <img align="center" src="./build-Rmd/figures/3-mac-terminal.png">
+    <img align="center" src="build-Rmd/figures/3-mac-terminal.png">
     <figcaption>The typical Mac terminal.</figcaption>
 </figure>
 
@@ -331,14 +331,14 @@ ps -u `whoami` | head
 ```
 ##   UID   PID TTY           TIME CMD
 ##   502   319 ??         0:00.07 /System/Library/Frameworks/LocalAuthentication.framework/Support/coreauthd
-##   502   320 ??         0:01.07 /usr/sbin/cfprefsd agent
-##   502   322 ??         0:00.86 /usr/libexec/UserEventAgent (Aqua)
-##   502   324 ??         0:00.69 /usr/sbin/distnoted agent
-##   502   325 ??         0:00.18 /usr/sbin/universalaccessd launchd -s
+##   502   320 ??         0:01.19 /usr/sbin/cfprefsd agent
+##   502   322 ??         0:01.02 /usr/libexec/UserEventAgent (Aqua)
+##   502   324 ??         0:00.78 /usr/sbin/distnoted agent
+##   502   325 ??         0:00.24 /usr/sbin/universalaccessd launchd -s
 ##   502   326 ??         0:00.02 /System/Library/PrivateFrameworks/CloudServices.framework/Helpers/com.apple.sbd
-##   502   327 ??         0:00.55 /usr/libexec/lsd
-##   502   328 ??         0:00.58 /usr/libexec/knowledge-agent
-##   502   329 ??         0:04.76 /usr/libexec/trustd --agent
+##   502   327 ??         0:00.57 /usr/libexec/lsd
+##   502   328 ??         0:00.83 /usr/libexec/knowledge-agent
+##   502   329 ??         0:05.07 /usr/libexec/trustd --agent
 ```
 
 To kill the execution of a specific command use the above to find the "PID" then use it as follows.
@@ -357,192 +357,28 @@ On a LINUX system permissions are granted to specific users. Here is a quick sum
 
 ```bash
 touch playground/test_permissions.txt
-ls -l
+ls -l | head
 chmod u+x playground/test_permissions.txt
-ls -l
+ls -l | head
 ```
 
 ```
-## total 768
+## total 112
 ## drwxr-xr-x  5 work  staff    160 Mar 15 18:21 build
-## -rw-r--r--  1 work  staff  46311 Mar 15 19:58 build-Rmd.Rmd
+## -rw-r--r--  1 work  staff  46332 Mar 15 20:08 build-Rmd.Rmd
 ## -rw-r--r--@ 1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
 ## drwxr-xr-x  9 work  staff    288 Mar 15 19:50 data
 ## drwxr-xr-x+ 8 work  staff    256 Mar 15 19:38 figures
-## drwxr-xr-x  3 work  staff     96 Mar 15 20:01 playground
+## drwxr-xr-x  3 work  staff     96 Mar 15 20:08 playground
 ## -rw-r--r--  1 work  staff     71 Mar 15 14:36 styles.css
-## -rw-r--r--  1 work  staff     34 Mar 15 19:58 unnamed-chunk-1.sh
-## -rw-r--r--  1 work  staff     92 Mar 15 19:58 unnamed-chunk-10.sh
-## -rw-r--r--  1 work  staff    177 Mar 15 19:58 unnamed-chunk-11.sh
-## -rw-r--r--  1 work  staff     73 Mar 15 19:58 unnamed-chunk-12.sh
-## -rw-r--r--  1 work  staff    446 Mar 15 19:58 unnamed-chunk-13.sh
-## -rw-r--r--  1 work  staff    106 Mar 15 19:58 unnamed-chunk-14.sh
-## -rw-r--r--  1 work  staff    103 Mar 15 19:58 unnamed-chunk-15.sh
-## -rw-r--r--  1 work  staff    172 Mar 15 19:58 unnamed-chunk-16.sh
-## -rw-r--r--  1 work  staff     78 Mar 15 19:58 unnamed-chunk-17.sh
-## -rw-r--r--  1 work  staff     40 Mar 15 19:58 unnamed-chunk-18.sh
-## -rw-r--r--  1 work  staff     37 Mar 15 19:58 unnamed-chunk-19.sh
-## -rw-r--r--  1 work  staff     19 Mar 15 19:58 unnamed-chunk-2.sh
-## -rw-r--r--  1 work  staff     43 Mar 15 19:58 unnamed-chunk-20.sh
-## -rw-r--r--  1 work  staff    108 Mar 15 19:58 unnamed-chunk-21.sh
-## -rw-r--r--  1 work  staff     57 Mar 15 19:58 unnamed-chunk-22.sh
-## -rw-r--r--  1 work  staff     71 Mar 15 19:58 unnamed-chunk-23.sh
-## -rw-r--r--  1 work  staff     20 Mar 15 19:58 unnamed-chunk-24.sh
-## -rw-r--r--  1 work  staff    130 Mar 15 19:58 unnamed-chunk-25.sh
-## -rw-r--r--  1 work  staff     60 Mar 15 19:58 unnamed-chunk-26.sh
-## -rw-r--r--  1 work  staff     60 Mar 15 19:58 unnamed-chunk-27.sh
-## -rw-r--r--  1 work  staff     19 Mar 15 19:58 unnamed-chunk-28.sh
-## -rw-r--r--  1 work  staff     11 Mar 15 19:58 unnamed-chunk-29.sh
-## -rw-r--r--  1 work  staff     21 Mar 15 19:58 unnamed-chunk-3.sh
-## -rw-r--r--  1 work  staff     12 Mar 15 19:58 unnamed-chunk-30.sh
-## -rw-r--r--  1 work  staff     97 Mar 15 19:58 unnamed-chunk-31.sh
-## -rw-r--r--  1 work  staff    140 Mar 15 19:58 unnamed-chunk-32.sh
-## -rw-r--r--  1 work  staff     96 Mar 15 19:58 unnamed-chunk-33.sh
-## -rw-r--r--  1 work  staff     77 Mar 15 19:58 unnamed-chunk-34.sh
-## -rw-r--r--  1 work  staff     46 Mar 15 19:58 unnamed-chunk-35.sh
-## -rw-r--r--  1 work  staff     81 Mar 15 19:58 unnamed-chunk-36.sh
-## -rw-r--r--  1 work  staff     73 Mar 15 19:58 unnamed-chunk-37.sh
-## -rw-r--r--  1 work  staff     91 Mar 15 19:58 unnamed-chunk-38.sh
-## -rw-r--r--  1 work  staff    155 Mar 15 19:58 unnamed-chunk-39.sh
-## -rw-r--r--  1 work  staff    234 Mar 15 19:58 unnamed-chunk-4.sh
-## -rw-r--r--  1 work  staff     13 Mar 15 19:58 unnamed-chunk-40.sh
-## -rw-r--r--  1 work  staff     20 Mar 15 19:58 unnamed-chunk-41.sh
-## -rw-r--r--  1 work  staff     54 Mar 15 19:58 unnamed-chunk-42.sh
-## -rw-r--r--  1 work  staff    113 Mar 15 19:58 unnamed-chunk-43.sh
-## -rw-r--r--  1 work  staff    122 Mar 15 19:58 unnamed-chunk-44.sh
-## -rw-r--r--  1 work  staff    105 Mar 15 19:58 unnamed-chunk-45.sh
-## -rw-r--r--  1 work  staff     77 Mar 15 19:58 unnamed-chunk-46.sh
-## -rw-r--r--  1 work  staff    199 Mar 15 19:58 unnamed-chunk-47.sh
-## -rw-r--r--  1 work  staff    262 Mar 15 19:58 unnamed-chunk-48.sh
-## -rw-r--r--  1 work  staff     15 Mar 15 19:58 unnamed-chunk-49.sh
-## -rw-r--r--  1 work  staff   1638 Mar 15 19:58 unnamed-chunk-5.sh
-## -rw-r--r--  1 work  staff    130 Mar 15 19:58 unnamed-chunk-50.sh
-## -rw-r--r--  1 work  staff    100 Mar 15 19:58 unnamed-chunk-51.sh
-## -rw-r--r--  1 work  staff    112 Mar 15 19:58 unnamed-chunk-52.sh
-## -rw-r--r--  1 work  staff     99 Mar 15 19:58 unnamed-chunk-53.sh
-## -rw-r--r--  1 work  staff     91 Mar 15 19:58 unnamed-chunk-54.sh
-## -rw-r--r--  1 work  staff    122 Mar 15 19:58 unnamed-chunk-55.sh
-## -rw-r--r--  1 work  staff    125 Mar 15 19:58 unnamed-chunk-56.sh
-## -rw-r--r--  1 work  staff     75 Mar 15 19:58 unnamed-chunk-57.sh
-## -rw-r--r--  1 work  staff     57 Mar 15 19:58 unnamed-chunk-58.sh
-## -rw-r--r--  1 work  staff    119 Mar 15 19:58 unnamed-chunk-59.sh
-## -rw-r--r--  1 work  staff    108 Mar 15 19:58 unnamed-chunk-6.sh
-## -rw-r--r--  1 work  staff    291 Mar 15 19:58 unnamed-chunk-60.sh
-## -rw-r--r--  1 work  staff    550 Mar 15 19:58 unnamed-chunk-61.sh
-## -rw-r--r--  1 work  staff    226 Mar 15 19:58 unnamed-chunk-62.sh
-## -rw-r--r--  1 work  staff    363 Mar 15 19:58 unnamed-chunk-63.sh
-## -rw-r--r--  1 work  staff    229 Mar 15 19:58 unnamed-chunk-64.sh
-## -rw-r--r--  1 work  staff    160 Mar 15 19:58 unnamed-chunk-65.sh
-## -rw-r--r--  1 work  staff     75 Mar 15 19:58 unnamed-chunk-66.sh
-## -rw-r--r--  1 work  staff    381 Mar 15 19:58 unnamed-chunk-67.sh
-## -rw-r--r--  1 work  staff     26 Mar 15 19:58 unnamed-chunk-69.sh
-## -rw-r--r--  1 work  staff     93 Mar 15 19:58 unnamed-chunk-7.sh
-## -rw-r--r--  1 work  staff     32 Mar 15 19:58 unnamed-chunk-70.sh
-## -rw-r--r--  1 work  staff     27 Mar 15 19:58 unnamed-chunk-71.sh
-## -rw-r--r--  1 work  staff     15 Mar 15 19:58 unnamed-chunk-72.sh
-## -rw-r--r--  1 work  staff    139 Mar 15 19:58 unnamed-chunk-73.sh
-## -rw-r--r--  1 work  staff     56 Mar 15 19:58 unnamed-chunk-74.sh
-## -rw-r--r--  1 work  staff     36 Mar 15 19:58 unnamed-chunk-75.sh
-## -rw-r--r--  1 work  staff     36 Mar 15 19:58 unnamed-chunk-76.sh
-## -rw-r--r--  1 work  staff     23 Mar 15 19:58 unnamed-chunk-77.sh
-## -rw-r--r--  1 work  staff    239 Mar 15 19:58 unnamed-chunk-78.sh
-## -rw-r--r--  1 work  staff     54 Mar 15 19:58 unnamed-chunk-79.sh
-## -rw-r--r--  1 work  staff     22 Mar 15 19:58 unnamed-chunk-8.sh
-## -rw-r--r--  1 work  staff     68 Mar 15 19:58 unnamed-chunk-80.sh
-## -rw-r--r--  1 work  staff     95 Mar 15 19:58 unnamed-chunk-81.sh
-## -rw-r--r--  1 work  staff    133 Mar 15 19:58 unnamed-chunk-82.sh
-## -rw-r--r--  1 work  staff    146 Mar 15 19:58 unnamed-chunk-83.sh
-## -rw-r--r--  1 work  staff     98 Mar 15 19:58 unnamed-chunk-9.sh
-## total 768
+## total 112
 ## drwxr-xr-x  5 work  staff    160 Mar 15 18:21 build
-## -rw-r--r--  1 work  staff  46311 Mar 15 19:58 build-Rmd.Rmd
+## -rw-r--r--  1 work  staff  46332 Mar 15 20:08 build-Rmd.Rmd
 ## -rw-r--r--@ 1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
 ## drwxr-xr-x  9 work  staff    288 Mar 15 19:50 data
 ## drwxr-xr-x+ 8 work  staff    256 Mar 15 19:38 figures
-## drwxr-xr-x  3 work  staff     96 Mar 15 20:01 playground
+## drwxr-xr-x  3 work  staff     96 Mar 15 20:08 playground
 ## -rw-r--r--  1 work  staff     71 Mar 15 14:36 styles.css
-## -rw-r--r--  1 work  staff     34 Mar 15 19:58 unnamed-chunk-1.sh
-## -rw-r--r--  1 work  staff     92 Mar 15 19:58 unnamed-chunk-10.sh
-## -rw-r--r--  1 work  staff    177 Mar 15 19:58 unnamed-chunk-11.sh
-## -rw-r--r--  1 work  staff     73 Mar 15 19:58 unnamed-chunk-12.sh
-## -rw-r--r--  1 work  staff    446 Mar 15 19:58 unnamed-chunk-13.sh
-## -rw-r--r--  1 work  staff    106 Mar 15 19:58 unnamed-chunk-14.sh
-## -rw-r--r--  1 work  staff    103 Mar 15 19:58 unnamed-chunk-15.sh
-## -rw-r--r--  1 work  staff    172 Mar 15 19:58 unnamed-chunk-16.sh
-## -rw-r--r--  1 work  staff     78 Mar 15 19:58 unnamed-chunk-17.sh
-## -rw-r--r--  1 work  staff     40 Mar 15 19:58 unnamed-chunk-18.sh
-## -rw-r--r--  1 work  staff     37 Mar 15 19:58 unnamed-chunk-19.sh
-## -rw-r--r--  1 work  staff     19 Mar 15 19:58 unnamed-chunk-2.sh
-## -rw-r--r--  1 work  staff     43 Mar 15 19:58 unnamed-chunk-20.sh
-## -rw-r--r--  1 work  staff    108 Mar 15 19:58 unnamed-chunk-21.sh
-## -rw-r--r--  1 work  staff     57 Mar 15 19:58 unnamed-chunk-22.sh
-## -rw-r--r--  1 work  staff     71 Mar 15 19:58 unnamed-chunk-23.sh
-## -rw-r--r--  1 work  staff     20 Mar 15 19:58 unnamed-chunk-24.sh
-## -rw-r--r--  1 work  staff    130 Mar 15 19:58 unnamed-chunk-25.sh
-## -rw-r--r--  1 work  staff     60 Mar 15 19:58 unnamed-chunk-26.sh
-## -rw-r--r--  1 work  staff     60 Mar 15 19:58 unnamed-chunk-27.sh
-## -rw-r--r--  1 work  staff     19 Mar 15 19:58 unnamed-chunk-28.sh
-## -rw-r--r--  1 work  staff     11 Mar 15 19:58 unnamed-chunk-29.sh
-## -rw-r--r--  1 work  staff     21 Mar 15 19:58 unnamed-chunk-3.sh
-## -rw-r--r--  1 work  staff     12 Mar 15 19:58 unnamed-chunk-30.sh
-## -rw-r--r--  1 work  staff     97 Mar 15 19:58 unnamed-chunk-31.sh
-## -rw-r--r--  1 work  staff    140 Mar 15 19:58 unnamed-chunk-32.sh
-## -rw-r--r--  1 work  staff     96 Mar 15 19:58 unnamed-chunk-33.sh
-## -rw-r--r--  1 work  staff     77 Mar 15 19:58 unnamed-chunk-34.sh
-## -rw-r--r--  1 work  staff     46 Mar 15 19:58 unnamed-chunk-35.sh
-## -rw-r--r--  1 work  staff     81 Mar 15 19:58 unnamed-chunk-36.sh
-## -rw-r--r--  1 work  staff     73 Mar 15 19:58 unnamed-chunk-37.sh
-## -rw-r--r--  1 work  staff     91 Mar 15 19:58 unnamed-chunk-38.sh
-## -rw-r--r--  1 work  staff    155 Mar 15 19:58 unnamed-chunk-39.sh
-## -rw-r--r--  1 work  staff    234 Mar 15 19:58 unnamed-chunk-4.sh
-## -rw-r--r--  1 work  staff     13 Mar 15 19:58 unnamed-chunk-40.sh
-## -rw-r--r--  1 work  staff     20 Mar 15 19:58 unnamed-chunk-41.sh
-## -rw-r--r--  1 work  staff     54 Mar 15 19:58 unnamed-chunk-42.sh
-## -rw-r--r--  1 work  staff    113 Mar 15 19:58 unnamed-chunk-43.sh
-## -rw-r--r--  1 work  staff    122 Mar 15 19:58 unnamed-chunk-44.sh
-## -rw-r--r--  1 work  staff    105 Mar 15 19:58 unnamed-chunk-45.sh
-## -rw-r--r--  1 work  staff     77 Mar 15 19:58 unnamed-chunk-46.sh
-## -rw-r--r--  1 work  staff    199 Mar 15 19:58 unnamed-chunk-47.sh
-## -rw-r--r--  1 work  staff    262 Mar 15 19:58 unnamed-chunk-48.sh
-## -rw-r--r--  1 work  staff     15 Mar 15 19:58 unnamed-chunk-49.sh
-## -rw-r--r--  1 work  staff   1638 Mar 15 19:58 unnamed-chunk-5.sh
-## -rw-r--r--  1 work  staff    130 Mar 15 19:58 unnamed-chunk-50.sh
-## -rw-r--r--  1 work  staff    100 Mar 15 19:58 unnamed-chunk-51.sh
-## -rw-r--r--  1 work  staff    112 Mar 15 19:58 unnamed-chunk-52.sh
-## -rw-r--r--  1 work  staff     99 Mar 15 19:58 unnamed-chunk-53.sh
-## -rw-r--r--  1 work  staff     91 Mar 15 19:58 unnamed-chunk-54.sh
-## -rw-r--r--  1 work  staff    122 Mar 15 19:58 unnamed-chunk-55.sh
-## -rw-r--r--  1 work  staff    125 Mar 15 19:58 unnamed-chunk-56.sh
-## -rw-r--r--  1 work  staff     75 Mar 15 19:58 unnamed-chunk-57.sh
-## -rw-r--r--  1 work  staff     57 Mar 15 19:58 unnamed-chunk-58.sh
-## -rw-r--r--  1 work  staff    119 Mar 15 19:58 unnamed-chunk-59.sh
-## -rw-r--r--  1 work  staff    108 Mar 15 19:58 unnamed-chunk-6.sh
-## -rw-r--r--  1 work  staff    291 Mar 15 19:58 unnamed-chunk-60.sh
-## -rw-r--r--  1 work  staff    550 Mar 15 19:58 unnamed-chunk-61.sh
-## -rw-r--r--  1 work  staff    226 Mar 15 19:58 unnamed-chunk-62.sh
-## -rw-r--r--  1 work  staff    363 Mar 15 19:58 unnamed-chunk-63.sh
-## -rw-r--r--  1 work  staff    229 Mar 15 19:58 unnamed-chunk-64.sh
-## -rw-r--r--  1 work  staff    160 Mar 15 19:58 unnamed-chunk-65.sh
-## -rw-r--r--  1 work  staff     75 Mar 15 19:58 unnamed-chunk-66.sh
-## -rw-r--r--  1 work  staff    381 Mar 15 19:58 unnamed-chunk-67.sh
-## -rw-r--r--  1 work  staff     26 Mar 15 19:58 unnamed-chunk-69.sh
-## -rw-r--r--  1 work  staff     93 Mar 15 19:58 unnamed-chunk-7.sh
-## -rw-r--r--  1 work  staff     32 Mar 15 19:58 unnamed-chunk-70.sh
-## -rw-r--r--  1 work  staff     27 Mar 15 19:58 unnamed-chunk-71.sh
-## -rw-r--r--  1 work  staff     15 Mar 15 19:58 unnamed-chunk-72.sh
-## -rw-r--r--  1 work  staff    139 Mar 15 19:58 unnamed-chunk-73.sh
-## -rw-r--r--  1 work  staff     56 Mar 15 19:58 unnamed-chunk-74.sh
-## -rw-r--r--  1 work  staff     36 Mar 15 19:58 unnamed-chunk-75.sh
-## -rw-r--r--  1 work  staff     36 Mar 15 19:58 unnamed-chunk-76.sh
-## -rw-r--r--  1 work  staff     23 Mar 15 19:58 unnamed-chunk-77.sh
-## -rw-r--r--  1 work  staff    239 Mar 15 19:58 unnamed-chunk-78.sh
-## -rw-r--r--  1 work  staff     54 Mar 15 19:58 unnamed-chunk-79.sh
-## -rw-r--r--  1 work  staff     22 Mar 15 19:58 unnamed-chunk-8.sh
-## -rw-r--r--  1 work  staff     68 Mar 15 19:58 unnamed-chunk-80.sh
-## -rw-r--r--  1 work  staff     95 Mar 15 19:58 unnamed-chunk-81.sh
-## -rw-r--r--  1 work  staff    133 Mar 15 19:58 unnamed-chunk-82.sh
-## -rw-r--r--  1 work  staff    146 Mar 15 19:58 unnamed-chunk-83.sh
-## -rw-r--r--  1 work  staff     98 Mar 15 19:58 unnamed-chunk-9.sh
 ```
 
 - `r` is readable.
@@ -796,105 +632,20 @@ In BASH you don't necessarily have an output argument. Instead the output, which
 
 ```bash
 ls -la > playground/list-of-files.txt
-cat playground/list-of-files.txt
+cat playground/list-of-files.txt | head
 ```
 
 ```
-## total 792
-## drwxr-xr-x  94 work  staff   3008 Mar 15 20:01 .
+## total 136
+## drwxr-xr-x  12 work  staff    384 Mar 15 20:08 .
 ## drwxr-xr-x  13 work  staff    416 Mar 15 19:59 ..
-## -rw-r--r--@  1 work  staff   6148 Mar 15 18:43 .DS_Store
+## -rw-r--r--@  1 work  staff   6148 Mar 15 20:02 .DS_Store
 ## -rw-r--r--   1 work  staff     58 Mar 15 19:41 .Rhistory
 ## drwxr-xr-x   4 work  staff    128 Mar 14 15:06 .Rproj.user
 ## drwxr-xr-x   5 work  staff    160 Mar 15 18:21 build
-## -rw-r--r--   1 work  staff  46311 Mar 15 19:58 build-Rmd.Rmd
+## -rw-r--r--   1 work  staff  46332 Mar 15 20:08 build-Rmd.Rmd
 ## -rw-r--r--@  1 work  staff    204 Mar 15 19:45 build-Rmd.Rproj
 ## drwxr-xr-x   9 work  staff    288 Mar 15 19:50 data
-## drwxr-xr-x+  8 work  staff    256 Mar 15 19:38 figures
-## drwxr-xr-x   7 work  staff    224 Mar 15 20:01 playground
-## -rw-r--r--   1 work  staff     71 Mar 15 14:36 styles.css
-## -rw-r--r--   1 work  staff     34 Mar 15 19:58 unnamed-chunk-1.sh
-## -rw-r--r--   1 work  staff     92 Mar 15 19:58 unnamed-chunk-10.sh
-## -rw-r--r--   1 work  staff    177 Mar 15 19:58 unnamed-chunk-11.sh
-## -rw-r--r--   1 work  staff     73 Mar 15 19:58 unnamed-chunk-12.sh
-## -rw-r--r--   1 work  staff    446 Mar 15 19:58 unnamed-chunk-13.sh
-## -rw-r--r--   1 work  staff    106 Mar 15 19:58 unnamed-chunk-14.sh
-## -rw-r--r--   1 work  staff    103 Mar 15 19:58 unnamed-chunk-15.sh
-## -rw-r--r--   1 work  staff    172 Mar 15 19:58 unnamed-chunk-16.sh
-## -rw-r--r--   1 work  staff     78 Mar 15 19:58 unnamed-chunk-17.sh
-## -rw-r--r--   1 work  staff     40 Mar 15 19:58 unnamed-chunk-18.sh
-## -rw-r--r--   1 work  staff     37 Mar 15 19:58 unnamed-chunk-19.sh
-## -rw-r--r--   1 work  staff     19 Mar 15 19:58 unnamed-chunk-2.sh
-## -rw-r--r--   1 work  staff     43 Mar 15 19:58 unnamed-chunk-20.sh
-## -rw-r--r--   1 work  staff    108 Mar 15 19:58 unnamed-chunk-21.sh
-## -rw-r--r--   1 work  staff     57 Mar 15 19:58 unnamed-chunk-22.sh
-## -rw-r--r--   1 work  staff     71 Mar 15 19:58 unnamed-chunk-23.sh
-## -rw-r--r--   1 work  staff     20 Mar 15 19:58 unnamed-chunk-24.sh
-## -rw-r--r--   1 work  staff    130 Mar 15 19:58 unnamed-chunk-25.sh
-## -rw-r--r--   1 work  staff     60 Mar 15 19:58 unnamed-chunk-26.sh
-## -rw-r--r--   1 work  staff     60 Mar 15 19:58 unnamed-chunk-27.sh
-## -rw-r--r--   1 work  staff     19 Mar 15 19:58 unnamed-chunk-28.sh
-## -rw-r--r--   1 work  staff     11 Mar 15 19:58 unnamed-chunk-29.sh
-## -rw-r--r--   1 work  staff     21 Mar 15 19:58 unnamed-chunk-3.sh
-## -rw-r--r--   1 work  staff     12 Mar 15 19:58 unnamed-chunk-30.sh
-## -rw-r--r--   1 work  staff     97 Mar 15 19:58 unnamed-chunk-31.sh
-## -rw-r--r--   1 work  staff    140 Mar 15 19:58 unnamed-chunk-32.sh
-## -rw-r--r--   1 work  staff     96 Mar 15 19:58 unnamed-chunk-33.sh
-## -rw-r--r--   1 work  staff     77 Mar 15 19:58 unnamed-chunk-34.sh
-## -rw-r--r--   1 work  staff     46 Mar 15 19:58 unnamed-chunk-35.sh
-## -rw-r--r--   1 work  staff     81 Mar 15 19:58 unnamed-chunk-36.sh
-## -rw-r--r--   1 work  staff     73 Mar 15 19:58 unnamed-chunk-37.sh
-## -rw-r--r--   1 work  staff     91 Mar 15 19:58 unnamed-chunk-38.sh
-## -rw-r--r--   1 work  staff    155 Mar 15 19:58 unnamed-chunk-39.sh
-## -rw-r--r--   1 work  staff    234 Mar 15 19:58 unnamed-chunk-4.sh
-## -rw-r--r--   1 work  staff     13 Mar 15 19:58 unnamed-chunk-40.sh
-## -rw-r--r--   1 work  staff     20 Mar 15 19:58 unnamed-chunk-41.sh
-## -rw-r--r--   1 work  staff     54 Mar 15 19:58 unnamed-chunk-42.sh
-## -rw-r--r--   1 work  staff    113 Mar 15 19:58 unnamed-chunk-43.sh
-## -rw-r--r--   1 work  staff    122 Mar 15 19:58 unnamed-chunk-44.sh
-## -rw-r--r--   1 work  staff    105 Mar 15 19:58 unnamed-chunk-45.sh
-## -rw-r--r--   1 work  staff     77 Mar 15 19:58 unnamed-chunk-46.sh
-## -rw-r--r--   1 work  staff    199 Mar 15 19:58 unnamed-chunk-47.sh
-## -rw-r--r--   1 work  staff    262 Mar 15 19:58 unnamed-chunk-48.sh
-## -rw-r--r--   1 work  staff     15 Mar 15 19:58 unnamed-chunk-49.sh
-## -rw-r--r--   1 work  staff   1638 Mar 15 19:58 unnamed-chunk-5.sh
-## -rw-r--r--   1 work  staff    130 Mar 15 19:58 unnamed-chunk-50.sh
-## -rw-r--r--   1 work  staff    100 Mar 15 19:58 unnamed-chunk-51.sh
-## -rw-r--r--   1 work  staff    112 Mar 15 19:58 unnamed-chunk-52.sh
-## -rw-r--r--   1 work  staff     99 Mar 15 19:58 unnamed-chunk-53.sh
-## -rw-r--r--   1 work  staff     91 Mar 15 19:58 unnamed-chunk-54.sh
-## -rw-r--r--   1 work  staff    122 Mar 15 19:58 unnamed-chunk-55.sh
-## -rw-r--r--   1 work  staff    125 Mar 15 19:58 unnamed-chunk-56.sh
-## -rw-r--r--   1 work  staff     75 Mar 15 19:58 unnamed-chunk-57.sh
-## -rw-r--r--   1 work  staff     57 Mar 15 19:58 unnamed-chunk-58.sh
-## -rw-r--r--   1 work  staff    119 Mar 15 19:58 unnamed-chunk-59.sh
-## -rw-r--r--   1 work  staff    108 Mar 15 19:58 unnamed-chunk-6.sh
-## -rw-r--r--   1 work  staff    291 Mar 15 19:58 unnamed-chunk-60.sh
-## -rw-r--r--   1 work  staff    550 Mar 15 19:58 unnamed-chunk-61.sh
-## -rw-r--r--   1 work  staff    226 Mar 15 19:58 unnamed-chunk-62.sh
-## -rw-r--r--   1 work  staff    363 Mar 15 19:58 unnamed-chunk-63.sh
-## -rw-r--r--   1 work  staff    229 Mar 15 19:58 unnamed-chunk-64.sh
-## -rw-r--r--   1 work  staff    160 Mar 15 19:58 unnamed-chunk-65.sh
-## -rw-r--r--   1 work  staff     75 Mar 15 19:58 unnamed-chunk-66.sh
-## -rw-r--r--   1 work  staff    381 Mar 15 19:58 unnamed-chunk-67.sh
-## -rw-r--r--   1 work  staff     26 Mar 15 19:58 unnamed-chunk-69.sh
-## -rw-r--r--   1 work  staff     93 Mar 15 19:58 unnamed-chunk-7.sh
-## -rw-r--r--   1 work  staff     32 Mar 15 19:58 unnamed-chunk-70.sh
-## -rw-r--r--   1 work  staff     27 Mar 15 19:58 unnamed-chunk-71.sh
-## -rw-r--r--   1 work  staff     15 Mar 15 19:58 unnamed-chunk-72.sh
-## -rw-r--r--   1 work  staff    139 Mar 15 19:58 unnamed-chunk-73.sh
-## -rw-r--r--   1 work  staff     56 Mar 15 19:58 unnamed-chunk-74.sh
-## -rw-r--r--   1 work  staff     36 Mar 15 19:58 unnamed-chunk-75.sh
-## -rw-r--r--   1 work  staff     36 Mar 15 19:58 unnamed-chunk-76.sh
-## -rw-r--r--   1 work  staff     23 Mar 15 19:58 unnamed-chunk-77.sh
-## -rw-r--r--   1 work  staff    239 Mar 15 19:58 unnamed-chunk-78.sh
-## -rw-r--r--   1 work  staff     54 Mar 15 19:58 unnamed-chunk-79.sh
-## -rw-r--r--   1 work  staff     22 Mar 15 19:58 unnamed-chunk-8.sh
-## -rw-r--r--   1 work  staff     68 Mar 15 19:58 unnamed-chunk-80.sh
-## -rw-r--r--   1 work  staff     95 Mar 15 19:58 unnamed-chunk-81.sh
-## -rw-r--r--   1 work  staff    133 Mar 15 19:58 unnamed-chunk-82.sh
-## -rw-r--r--   1 work  staff    146 Mar 15 19:58 unnamed-chunk-83.sh
-## -rw-r--r--   1 work  staff     98 Mar 15 19:58 unnamed-chunk-9.sh
 ```
 
 ## `wc` word/character/line count
@@ -1085,8 +836,8 @@ ls -l playground | grep "script_0.sh"
 ```
 
 ```
-## -rw-r--r--  1 work  staff     0 Mar 15 20:01 script_0.sh
-## -rwxr--r--  1 work  staff     0 Mar 15 20:01 script_0.sh
+## -rw-r--r--  1 work  staff     0 Mar 15 20:08 script_0.sh
+## -rwxr--r--  1 work  staff     0 Mar 15 20:08 script_0.sh
 ```
 
 You can then run the file using the following syntax in the terminal:
@@ -1459,17 +1210,17 @@ for item in playground/*; do ls -l $item; done
 ## list2
 ## list3
 ## total 0
-## -rw-r--r--  1 work  staff  0 Mar 15 20:01 copy.txt
-## -rw-r--r--  1 work  staff  0 Mar 15 20:01 original.txt
-## -rw-r--r--  1 work  staff  0 Mar 15 20:01 playground/copy.txt
-## -rw-r--r--  1 work  staff  3400 Mar 15 20:01 playground/duplicated.csv
-## -rw-r--r--  1 work  staff  6167 Mar 15 20:01 playground/list-of-files.txt
-## -rw-r--r--  1 work  staff  0 Mar 15 20:01 playground/original.txt
-## -rwxr--r--  1 work  staff  36 Mar 15 20:01 playground/script_0.sh
-## -rw-r--r--  1 work  staff  18 Mar 15 20:01 playground/script_1.sh
-## -rw-r--r--  1 work  staff  49 Mar 15 20:01 playground/script_2.sh
-## -rw-r--r--  1 work  staff  3975 Mar 15 20:01 playground/std-output-redirection.txt
-## -rwxr--r--  1 work  admin  0 Mar 15 20:01 playground/test_permissions.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 copy.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 original.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 playground/copy.txt
+## -rw-r--r--  1 work  staff  3400 Mar 15 20:08 playground/duplicated.csv
+## -rw-r--r--  1 work  staff  682 Mar 15 20:08 playground/list-of-files.txt
+## -rw-r--r--  1 work  staff  0 Mar 15 20:08 playground/original.txt
+## -rwxr--r--  1 work  staff  36 Mar 15 20:08 playground/script_0.sh
+## -rw-r--r--  1 work  staff  18 Mar 15 20:08 playground/script_1.sh
+## -rw-r--r--  1 work  staff  49 Mar 15 20:08 playground/script_2.sh
+## -rw-r--r--  1 work  staff  3975 Mar 15 20:08 playground/std-output-redirection.txt
+## -rwxr--r--  1 work  admin  0 Mar 15 20:08 playground/test_permissions.txt
 ```
 
 Note that a variable is defined and then called.
@@ -1535,10 +1286,10 @@ done
 ```
 
 ```
-## total 792
-## drwxr-xr-x  94 work  staff   3008 Mar 15 20:01 .
+## total 136
+## drwxr-xr-x  12 work  staff    384 Mar 15 20:08 .
 ## drwxr-xr-x  13 work  staff    416 Mar 15 19:59 ..
-## -rw-r--r--@  1 work  staff   6148 Mar 15 18:43 .DS_Store
+## -rw-r--r--@  1 work  staff   6148 Mar 15 20:02 .DS_Store
 ## -rw-r--r--   1 work  staff     58 Mar 15 19:41 .Rhistory
 ## "sepal.length","sepal.width","petal.length","petal.width","variety"
 ## 5.1,3.5,1.4,.2,"Setosa"
@@ -1944,7 +1695,7 @@ curl -O https://sitename.com/path/filename[01-20]*\.txt
 Let's start by downloading a gene file from rscb.org. Chose a gene any really and download the fasta file.
 
 <figure>
-    <img align="center" src="./build-Rmd/figures/4-download-fasta.png">
+    <img align="center" src="build-Rmd/figures/4-download-fasta.png">
     <figcaption>Just download any file.</figcaption>
 </figure>
 
