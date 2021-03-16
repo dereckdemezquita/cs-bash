@@ -231,15 +231,15 @@ The Linux operating system has by far gone on to become the most succesful and w
 
 ## Architecture of UNIX
 
-<figure>
-    <img align="center" src="build-Rmd/figures/1-os-structure.jpg">
+<figure align="center">
+    <img src="build-Rmd/figures/1-os-structure.jpg">
     <figcaption>A representation of an OS's structure.</figcaption>
 </figure>
 
 Computer programmes, including GUI ones, access the computer's hardware through the kernal and system calls.
 
-<figure>
-    <img align="center" src="build-Rmd/figures/2-file-structure.jpg">
+<figure align="center">
+    <img src="build-Rmd/figures/2-file-structure.jpg">
     <figcaption>A representation of an OS's file tree.</figcaption>
 </figure>
 
@@ -261,8 +261,8 @@ In essence the shell is a programme like any other, but this particular programm
 
 It is an interface where we can give commands, a command line type of interface. The command line interface interprets what the user types. A command can be: a built-in shell command (`ls`, `pwd`, `mkdir`, etc...), an executable script, or even a compiled programme.
 
-<figure>
-    <img align="center" src="build-Rmd/figures/3-mac-terminal.png">
+<figure align="center">
+    <img src="build-Rmd/figures/3-mac-terminal.png">
     <figcaption>The typical Mac terminal.</figcaption>
 </figure>
 
@@ -1694,8 +1694,8 @@ curl -O https://sitename.com/path/filename[01-20]*\.txt
 
 Let's start by downloading a gene file from rscb.org. Chose a gene any really and download the fasta file.
 
-<figure>
-    <img align="center" src="build-Rmd/figures/4-download-fasta.png">
+<figure align="center">
+    <img src="build-Rmd/figures/4-download-fasta.png">
     <figcaption>Just download any file.</figcaption>
 </figure>
 
