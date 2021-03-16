@@ -2,6 +2,53 @@
 rm -r playground
 mkdir playground
 
+touch playground/test_permissions.txt
+ls -l
+chmod u+x playground/test_permissions.txt
+ls -l
+
+chown Work playground/test_permissions.txt # sets the ownership of file to a user.
+
+groups
+
+chgrp admin playground/test_permissions.txt # sets the ownership of file to a group.
+
+ls -l ./data/*\.csv # this will print all files that are .csv extensions
+
+touch playground/test_zip.txt
+ls -l playground > playground/test_zip.txt # create a file and add content
+ls -l playground
+
+cat playground/test_zip.txt # show the original file
+gzip playground/test_zip.txt # this will compress the file the original will no longer be available, there is an option to keep both
+cat playground/test_zip.txt.gz # show the file was zipped
+
+gunzip playground/test_zip.txt.gz # will unzip the file back to the original.
+
+ls -l playground/ > playgound/test_zip.txt 
+
+gzip playground/test_zip.txt
+gzip playground/test_zip.txt.gz
+
+ls -l playground
+tar -cf playground/Archive.zip figures/*
+ls -l playground
+
+cat playground/Archive.zip
+
+touch playground/original.txt
+mkdir playground/backupdir
+cp playground/original.txt playground/copy.txt
+cp playground/original.txt playground/copy.txt playground/backupdir
+
+cut -f -1-2,5 -d , data/iris.csv | head -n 5 # head used to reduce print size
+
+cut -f 2 -d , data/iris.csv | head -n 5
+
+tail -n 20 data/iris.csv | head -n 3
+
+head data/iris.csv
+
 grep "Virginica" data/iris.csv | head -n 5
 
 grep -c "Virginica" data/iris.csv data/mtcars.csv # -c prints number of matches
@@ -26,7 +73,7 @@ nano data/iris.csv
 
 set | head
 
-head data/iris.csv
+head data/mtcars.csv
 
 echo $SHELL
 
@@ -68,7 +115,13 @@ bash playground/script_2.sh John 28
 cat data/iris.csv 1> playground/std-output-redirection.txt # redirects the standard output to a file
 cat playground/std-output-redirection.txt | head -n 5
 
-head data/mtcars.csv
+w # shows list of connected users.
+whoami # shows the name of the current user.
+uname -a # shows kernal information (Linux, Darwin for OSX).
+date # shows current date and time.
+
+# ctrl + c abort execution.
+# ctrl + z pause execution.
 
 expr 1 + 6.2
 
@@ -224,7 +277,10 @@ else
     # OTHER CODE
 fi # finishes an if statement
 
-ls -l ./data/*\.csv # this will print all files that are .csv extensions
+login # logs in locally
+
+ssh user@server # ssh command for server use
+logout # logs you out of your session
 
 var="Yes"
 if [ $var == "No" ]; then
@@ -347,10 +403,7 @@ echo "The result is $saved_var"
 
 15 2 * * * bash script.sh
 
-touch playground/original.txt
-mkdir playground/backupdir
-cp playground/original.txt playground/copy.txt
-cp playground/original.txt playground/copy.txt playground/backupdir
+ps -u "Dereck" | head # this command shows all programmes currently running for a given user
 
 10,20,40 * * * * bash script.sh
 
@@ -358,8 +411,32 @@ cp playground/original.txt playground/copy.txt playground/backupdir
 
 bash --version
 
-cut -f -1-2,5 -d , data/iris.csv | head -n 5 # head used to reduce print size
+curl -o playground/iris_download.csv https://gist.githubusercontent.com/netj/8836201/raw/6f9306ad21398ea43cba4f7d537619d0e07d5ae3/iris.csv
 
-cut -f 2 -d , data/iris.csv | head -n 5
+curl -O https://sitename.com/path/filename[01-20]*\.txt
 
-tail -n 20 data/iris.csv | head -n 3
+cat data/rcsb_pdb_6CLZ.fasta | head
+
+cat data/rcsb_pdb_6E5B.fasta | head
+
+cat data/SC.gtf | head
+
+cat data/rcsb_pdb_6E5B.fasta | tail -n +1 | cut -c4- | sort -k1 | uniq | awk '{print $1 "\t" $4}' | head
+
+cat data/rcsb_pdb_6E5B.fasta | tail -n +1 | cut -c4- | sort -k1 | uniq | awk '{print $1 "\t" $4}' | gzip > playground/newfile.txt.gz
+
+cat data/SC.gtf | grep -e "SGD\ttranscript" | head -5
+
+ps -u `whoami` | head
+
+cat data/SC.gtf | grep -e "transcript\t" | cut -f 1,4,5,6,10 | head
+
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | head
+
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | sed 's/[;\*]//g' | sed 's/["\*]//g' | head
+
+cat data/SC.gtf | grep -e "transcript\t" | awk '{print $1"\t"$4"\t"$5"\t"$10"\t0\t"$7}' | sed 's/[;\*]//g' | sed 's/["\*]//g' | sort -k 2  | head
+
+kill -9 PID # kills programme with given PID
+
+# Flag: -9 KILL (non-catchable, non-ignorable kill)
