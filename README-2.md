@@ -231,17 +231,15 @@ The Linux operating system has by far gone on to become the most succesful and w
 
 ## Architecture of UNIX
 
-<figure align="center">
+<p align="center">
     <img src="build-Rmd/figures/1-os-structure.jpg">
-    <figcaption>A representation of an OS's structure.</figcaption>
-</figure>
+</p>
 
 Computer programmes, including GUI ones, access the computer's hardware through the kernal and system calls.
 
-<figure align="center">
+<p align="center">
     <img src="build-Rmd/figures/2-file-structure.jpg">
-    <figcaption>A representation of an OS's file tree.</figcaption>
-</figure>
+</p>
 
 The computer's storage is the separated into various parts and compartments, some accessible to a basic user and some not. The `/bin`, `/dev`, `/etc`, are mostly files used by the system and the programmes installed on the machine. `/usr` contains common user system files for programmes installed on the machine; this reduces redundancies and saves storage. Finally the `/home` directory contains the different user's files; on MacOS machines.
 
@@ -261,10 +259,9 @@ In essence the shell is a programme like any other, but this particular programm
 
 It is an interface where we can give commands, a command line type of interface. The command line interface interprets what the user types. A command can be: a built-in shell command (`ls`, `pwd`, `mkdir`, etc...), an executable script, or even a compiled programme.
 
-<figure align="center">
+<p align="center">
     <img src="build-Rmd/figures/3-mac-terminal.png">
-    <figcaption>The typical Mac terminal.</figcaption>
-</figure>
+</p>
 
 As stated before there are different implementations of the shell; `sh`, `BASH`, `csh`, `tsh`, `zsh`...
 
@@ -1694,10 +1691,9 @@ curl -O https://sitename.com/path/filename[01-20]*\.txt
 
 Let's start by downloading a gene file from rscb.org. Chose a gene any really and download the fasta file.
 
-<figure align="center">
+<p align="center">
     <img src="build-Rmd/figures/4-download-fasta.png">
-    <figcaption>Just download any file.</figcaption>
-</figure>
+</p>
 
 We will be working with the following files:
 
